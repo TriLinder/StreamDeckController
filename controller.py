@@ -9,26 +9,44 @@ class button :
         self.keyIndex = keyIndex
 
         #Get the coords of the button. (Top left button is 0x0.)
-        self.x = (keyIndex % controller.width) -1
-        self.y = math.ceil(keyIndex / controller.width)
+        self.x = (keyIndex % controller.width)
+        self.y = math.ceil((keyIndex+1) / controller.width)
 
-        self.caption = "test"
+        self.coords = f"{self.x}x{self.y}"
+
+        self.caption = f"{self.keyIndex} - {self.coords}"
+        self.fontSize = 14
+        self.fontColor = "white"
+        self.font = "C:\\Windows\\Fonts\\Arial.ttf"
+
         self.background = Image.new("RGB", (controller.buttonRes, controller.buttonRes))
     
     def setCaption(self, caption) :
         self.caption = str(caption)
 
+    def setFont(self, font, size=None, color=None) :
+        self.font = font
+
+        if size :
+            self.fontSize = size
+        
+        if color :
+            self.fontColor = color
+
     def sendToDevice(self) :
         image = PILHelper.create_scaled_image(deck, self.background, margins=[0, 0, 0, 0])
 
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype("C:\\Windows\\Fonts\\Arial.ttf", 14)
-        draw.text((image.width / 2, image.height / 2), text=self.caption, font=font, anchor="ms", fill="white")
+        font = ImageFont.truetype(self.font, self.fontSize)
+        draw.text((image.width / 2, image.height / 2), text=self.caption, font=font, anchor="ms", fill=self.fontColor)
 
         image = PILHelper.to_native_format(deck, image)
 
         with deck :
             deck.set_key_image(self.keyIndex, image)
+    
+    def loadImage(self, path) :
+        self.background = Image.open(path)
 
 class controller :
     def __init__(self, deck) :
@@ -49,7 +67,8 @@ class controller :
         d = {}
 
         for key in range(self.keyCount) :
-            d[key] = button(key, self)
+            btn = button(key, self)
+            d[btn.coords] = btn
         
         self.screen = d
     
@@ -60,7 +79,14 @@ class controller :
 if __name__ == "__main__" :
     streamdecks = DeviceManager().enumerate()
     for index, deck in enumerate(streamdecks) :
+
         c = controller(deck)
+
+        middleKey = c.screen["2x2"]
+        middleKey.loadImage("test.png")
+        middleKey.setCaption("Hello, world!")
+        middleKey.setFont("C:\\Windows\\Fonts\\Arial.ttf", size=12, color="red")
+
         c.sendScreenToDevice()
 
         while True :
