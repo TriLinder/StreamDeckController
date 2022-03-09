@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.ImageHelpers import PILHelper
 import threading
 import time
+import math
 import sys 
 
 
@@ -56,7 +57,7 @@ for index, deck in enumerate(streamdecks):
 
     for key in range(deck.key_count()) :
         print(f"Key: {key}")
-        setKeyImage(deck, key, "b.png", f"{key} (OFF)")
+        setKeyImage(deck, key, "b.png", f"{math.ceil((key+1)/5)} (OFFr)")
         time.sleep(.5)
     
     while True :
