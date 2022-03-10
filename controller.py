@@ -122,9 +122,17 @@ class pages :
         for page in os.listdir("pages") : #Load all the .json files to memory
             if page.endswith(".json") :
                 with open(os.path.join("pages", page), "r") as f :
-                    self.pages[page] = json.loads(f.read())
-        
+                    self.pages[page] = json.loads(f.read()) 
+
+        requiredTags = ["images", "ticks", "dimensions", "created", "buttons"]
+
         for page in self.pages : #Load all the used images to memory
+            for tag in requiredTags :
+                if not tag in self.pages[page] :
+                    self.error("Invalid\njson", f"Tag '{tag}' not found in {page}")
+
+                    return None
+            
             for image in self.pages[page]["images"] :
                 if not image in self.images :
                     path = os.path.join("pages", "imgs", image)
@@ -152,7 +160,7 @@ class pages :
 
                     self.ticks[tick] = id
                 except :
-                    self.error("Could not\nimport.", "blah")
+                    pass
 
 
     def error(self, screenError, logError) : #Throws the stream deck into an error state.
@@ -167,12 +175,15 @@ class pages :
         self.controller.sendScreenToDevice()
 
         self.activePage = {"buttons":{"1x0": {"actions": {"openTxt":"errorLog.txt"}}}}
-        self.activePageName = ""
+        self.activePageName = "**error**"
 
         with open("errorLog.txt", "a") as f :
             f.write(f"{logError}\n")
     
     def switchToPage(self, page) :
+        if self.activePageName == "**error**" : #Make sure you can't switch the page when in error state. Doing so would probably break something
+            return False
+
         j = self.pages[page]
         buttons = j["buttons"]
 
@@ -193,11 +204,15 @@ class pages :
             buttonJ = buttons[button]
 
             if not buttonJ["background"] in self.images :
-                img = buttonJ["background"]
-                self.error("Missing\nimage.", f"Image '{img}' was not found. Please add the image to the 'images' list of '{page}'")
+                self.error("Missing\nimage.", f"Image '{buttonJ['background']}' was not found. Please add the image to the 'images' list of '{page}'")
                 return False
 
-            key = self.controller.screen[button]
+            try :
+                key = self.controller.screen[button]
+            except KeyError :
+                self.error("Invalid\ncoords", f"Invalid coords '{button}'.")
+                return False
+
             key.setCaption(buttonJ["caption"])
             key.background = self.images[buttonJ["background"]]
             key.fontSize = buttonJ["fontSize"]
@@ -294,7 +309,12 @@ class pages :
 
                     tickModule = globals()[tickID]
 
-                    newState = tickModule.getKeyState(button, self.activePageName, self.controller.serial, action)
+                    try :
+                        newState = tickModule.getKeyState(button, self.activePageName, self.controller.serial, action)
+                    except Exception as e :
+                        self.error("Ticks\nerror", f"Error in '{tick}'. Button: '{button}' Page: '{self.activePageName}' Serial: '{self.controller.serial}' Action: '{action}' Error: '{e}'")
+                        return False
+
                     key = self.controller.screen[button]
 
                     if "caption" in newState :
