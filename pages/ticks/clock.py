@@ -21,6 +21,3 @@ def keyPress(coords, page, serial) : #Cycle through time formats on keypress
         format = 0
 
 #print("Hello, world!")
-
-if __name__ == "__main__" :
-    print(getKeyState("0x0", "clock"))    

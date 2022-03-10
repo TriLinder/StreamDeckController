@@ -1,7 +1,9 @@
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from PIL import Image, ImageDraw, ImageFont
+import subprocess
 import importlib
+import platform
 import uuid
 import json
 import math
@@ -130,7 +132,7 @@ class pages :
                     if os.path.isfile(path) :
                         self.images[image] = Image.open(path)
                     else :
-                        print(f"{image} not found!")
+                        #print(f"{image} not found!")
                         self.images[image] = Image.new("RGB", (self.controller.buttonRes, self.controller.buttonRes))
             
             for tick in self.pages[page]["ticks"] : #Imports all the ticking files
@@ -144,11 +146,31 @@ class pages :
                 #print(module)
                 #globals()[id] = module
 
-                module = importlib.import_module(f"pages.ticks.{name}")
-                globals()[id] = module
+                try :
+                    module = importlib.import_module(f"pages.ticks.{name}")
+                    globals()[id] = module
 
-                self.ticks[tick] = id
-                
+                    self.ticks[tick] = id
+                except :
+                    self.error("Could not\nimport.", "blah")
+
+
+    def error(self, screenError, logError) : #Throws the stream deck into an error state.
+        self.controller.resetScreen()
+
+        self.tickingItems = {}
+
+        self.controller.screen["0x0"].caption = screenError
+        self.controller.screen["0x0"].fontColor = "black"
+        self.controller.screen["0x0"].background = Image.new("RGB", (self.controller.buttonRes, self.controller.buttonRes), (255, 255, 255))
+        self.controller.screen["1x0"].caption = " See log\nfor details"
+        self.controller.sendScreenToDevice()
+
+        self.activePage = {"buttons":{"1x0": {"actions": {"openTxt":"errorLog.txt"}}}}
+        self.activePageName = ""
+
+        with open("errorLog.txt", "a") as f :
+            f.write(f"{logError}\n")
     
     def switchToPage(self, page) :
         j = self.pages[page]
@@ -162,8 +184,18 @@ class pages :
 
         self.tickingItems = {}
 
+        dimensions = f"{self.controller.width}x{self.controller.height}" #Detect pages for other stream deck layouts
+        if not dimensions == j["dimensions"] :
+            self.error("Invalid\nlayout.", f"Page '{page}' is in an invalid layout size for Stream Deck '{self.controller.serial}'.")
+            return False
+
         for button in buttons :
             buttonJ = buttons[button]
+
+            if not buttonJ["background"] in self.images :
+                img = buttonJ["background"]
+                self.error("Missing\nimage.", f"Image '{img}' was not found. Please add the image to the 'images' list of '{page}'")
+                return False
 
             key = self.controller.screen[button]
             key.setCaption(buttonJ["caption"])
@@ -194,6 +226,22 @@ class pages :
             self.controller.deck.reset()
             self.controller.deck.close()
             sys.exit()
+        elif action == "setBrightness" :
+            self.controller.deck.set_brightness(int(actionData))
+        elif action == "showCoords" :
+            self.controller.coordsCaptions()
+            self.controller.sendScreenToDevice()
+        elif action == "runCommand" :
+            subprocess.call(str(actionData), stderr=subprocess.DEVNULL)
+        elif action == "openTxt" :
+            system = platform.system().lower()
+
+            if system == 'windows' or system == 'darwin' :
+                os.system(f"start {actionData}") #Windows or Mac OS
+            else :
+                subprocess.call(('xdg-open', actionData)) #Linux
+
+
     
     def clickHandler(self, deck, keyIndex, state) :
         x = (keyIndex % self.controller.width)
@@ -209,7 +257,12 @@ class pages :
             
                 for action in button["actions"] :
                     actionData = button["actions"][action]
-                    self.triggerAction(coords, action, actionData)
+
+                    try :
+                        self.triggerAction(coords, action, actionData)
+                    except Exception as e :
+                        self.error("Could not\ntrigger.", f"Could not trigger action '{action}' with action data '{actionData}', error: {e}")
+                        return False
 
                 if coords in self.tickingItems : #Triggers tick function on ticking buttons
                     ticks = self.tickingItems[coords]
@@ -228,7 +281,12 @@ class pages :
         for button in self.tickingItems :
             ticks = self.tickingItems[button]
             for tick in ticks :
-                tickID = self.ticks[tick]
+                try :
+                    tickID = self.ticks[tick]
+                except KeyError :
+                    self.error("Ticks file\nnot found.", f"The ticks file '{tick}' was not found. Please add it to the top of '{self.activePageName}'.")
+                    return False
+
                 action = ticks[tick]["action"]
                 nextTrigger = ticks[tick]["nextTrigger"]
 
@@ -241,6 +299,9 @@ class pages :
 
                     if "caption" in newState :
                         key.caption = newState["caption"]
+                    
+                    if "background" in newState :
+                        key.background = newState["background"]
                     
                     if "fontColor" in newState :
                         key.fontColor = newState["fontColor"]
