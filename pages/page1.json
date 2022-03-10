@@ -1,0 +1,11 @@
+{
+    "images": ["test1.png", "test2.png", "test3.png"],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+        "0x0" : {"caption":"Test1", "fontSize":14, "color":"white", "background":"test3.png"},
+        "4x1" : {"caption":"Test2", "fontSize":14, "color":"white", "background":"test2.png"},
+        "2x1" : {"caption":"Test3", "fontSize":14, "color":"white", "background":"test1.png"} 
+    }
+}
