@@ -103,6 +103,8 @@ class controller :
         self.deck.set_key_callback(func)
     
     def coordsCaptions(self) :
+        self.resetScreen()
+
         for key in self.screen :
             self.screen[key].coordsCaption()
 
@@ -183,6 +185,10 @@ class pages :
     
     def switchToPage(self, page) :
         if self.activePageName == "**error**" : #Make sure you can't switch the page when in error state. Doing so would probably break something
+            return False
+
+        if not page in self.pages :
+            self.error("Page\nmissing", f"Could not find '{page}'")
             return False
 
         j = self.pages[page]

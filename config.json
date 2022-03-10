@@ -1,0 +1,5 @@
+{
+    "startingPage": "page1.json", 
+    "startingBrightness" : 75,
+    "deviceSerial": "selectOnStartup"
+}
