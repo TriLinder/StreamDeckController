@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 import subprocess
 import importlib
 import platform
+import keyboard
 import uuid
 import json
 import math
@@ -255,6 +256,10 @@ class pages :
                 os.system(f"start {actionData}") #Windows or Mac OS
             else :
                 subprocess.call(('xdg-open', actionData)) #Linux
+        elif action == "keyboardType" :
+            keyboard.write(actionData)
+        elif action == "keyboardShortcut" :
+            keyboard.send(actionData)
 
 
     
