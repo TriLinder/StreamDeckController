@@ -20,6 +20,7 @@ class button :
         self.caption = ""
         self.fontSize = 14
         self.fontColor = "white"
+        self.activated = False
         self.font = "C:\\Windows\\Fonts\\Arial.ttf"
 
         self.background = Image.new("RGB", (controller.buttonRes, controller.buttonRes))
@@ -37,10 +38,20 @@ class button :
             self.fontColor = color
 
     def sendToDevice(self) :
-        image = PILHelper.create_scaled_image(self.controller.deck, self.background, margins=[0, 0, 0, 0])
+        if not self.activated :
+            size = 0
+        else :
+            size = round(self.controller.buttonRes / 6)
+
+        image = PILHelper.create_scaled_image(self.controller.deck, self.background, margins=[size, size, size, size])
 
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype(self.font, self.fontSize)
+        
+        fontSize = self.fontSize
+        if self.activated :
+            fontSize = fontSize / 1.25
+
+        font = ImageFont.truetype(self.font, round(fontSize)) #Also resizing the text over here
         draw.text((image.width / 2, image.height / 2), text=self.caption, font=font, anchor="ms", fill=self.fontColor)
 
         image = PILHelper.to_native_format(self.controller.deck, image)
@@ -94,7 +105,11 @@ class pages :
         self.pages = {}
         self.images = {}
 
+        self.activePage = {}
+        self.activePageName = ""
+
         self.controller = controller
+        self.controller.setKeyCallback(self.clickHandler)
 
         for page in os.listdir("pages") : #Load all the .json files to memory
             if page.endswith(".json") :
@@ -116,7 +131,11 @@ class pages :
         j = self.pages[page]
         buttons = j["buttons"]
 
-        self.controller.coordsCaptions()
+        self.controller.resetScreen()
+        #self.controller.coordsCaptions()
+        
+        self.activePage = j
+        self.activePageName = page
 
         for button in buttons :
             buttonJ = buttons[button]
@@ -126,6 +145,29 @@ class pages :
             key.background = self.images[buttonJ["background"]]
 
         self.controller.sendScreenToDevice()
+    
+    def triggerAction(self, coords, action, actionData) :
+        print(coords, action, actionData)
+
+        if action == "switchPage" :
+            self.switchToPage(actionData)
+    
+    def clickHandler(self, deck, keyIndex, state) :
+        x = (keyIndex % self.controller.width)
+        y = math.ceil((keyIndex+1) / self.controller.width)-1
+        coords = f"{x}x{y}"
+
+        self.controller.screen[coords].activated = state #Triggers the click 'animation'.
+        self.controller.screen[coords].sendToDevice()
+
+        try :
+            button = self.activePage["buttons"][coords]
+            
+            for action in button["actions"] :
+                actionData = button["actions"][action]
+                self.triggerAction(coords, action, actionData)
+        except KeyError :
+            pass
 
 
 # ------------------------ #
@@ -155,3 +197,6 @@ if __name__ == "__main__" :
 
         p = pages(c)
         p.switchToPage("page1.json")
+
+        while True :
+            time.sleep(10)

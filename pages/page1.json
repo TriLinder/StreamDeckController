@@ -4,8 +4,8 @@
     "created": 1646871751,
     
     "buttons": {
-        "0x0" : {"caption":"Test1", "fontSize":14, "color":"white", "background":"test3.png"},
-        "4x1" : {"caption":"Test2", "fontSize":14, "color":"white", "background":"test2.png"},
-        "2x1" : {"caption":"Test3", "fontSize":14, "color":"white", "background":"test1.png"} 
+        "0x0" : {"caption":"Test1", "fontSize":14, "color":"white", "background":"test3.png", "actions":{"switchPage":"page2.json"}},
+        "4x1" : {"caption":"Test2", "fontSize":14, "color":"white", "background":"test2.png", "actions":{"none":""}},
+        "2x1" : {"caption":"Test3", "fontSize":14, "color":"white", "background":"test1.png", "actions":{"exit":""}} 
     }
 }
