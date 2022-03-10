@@ -1,11 +1,12 @@
 {
     "images": ["test1.png", "test2.png", "test3.png"],
+    "ticks": ["clock.py"],
     "dimensions": "5x3",
     "created": 1646871751,
     
     "buttons": {
-        "0x0" : {"caption":"Test1", "fontSize":14, "color":"white", "background":"test3.png", "actions":{"switchPage":"page2.json"}},
-        "4x1" : {"caption":"Test2", "fontSize":14, "color":"white", "background":"test2.png", "actions":{"none":""}},
-        "2x1" : {"caption":"Test3", "fontSize":14, "color":"white", "background":"test1.png", "actions":{"exit":""}} 
+        "0x0" : {"caption":"Folder", "fontSize":14, "color":"black", "background":"test3.png", "actions":{"switchPage":"page2.json"}},
+        "4x1" : {"caption":"Loading..", "fontSize":14, "color":"red", "background":"test2.png", "actions":{"none":""}, "ticks":{"clock.py": "clock"}},
+        "2x1" : {"caption":"Exit", "fontSize":14, "color":"white", "background":"test1.png", "actions":{"exit":""}} 
     }
 }

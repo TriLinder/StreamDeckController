@@ -1,9 +1,12 @@
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from PIL import Image, ImageDraw, ImageFont
+import importlib
+import uuid
 import json
 import math
 import time
+import sys
 import os
 
 class button :
@@ -104,9 +107,12 @@ class pages :
     def __init__(self, controller) :
         self.pages = {}
         self.images = {}
+        self.ticks = {}
 
         self.activePage = {}
         self.activePageName = ""
+
+        self.tickingItems = {}
 
         self.controller = controller
         self.controller.setKeyCallback(self.clickHandler)
@@ -126,6 +132,23 @@ class pages :
                     else :
                         print(f"{image} not found!")
                         self.images[image] = Image.new("RGB", (self.controller.buttonRes, self.controller.buttonRes))
+            
+            for tick in self.pages[page]["ticks"] : #Imports all the ticking files
+                name = tick.strip(".py")
+                id = "t" + uuid.uuid4().hex[:12]
+                
+                #exec(f"global {id}") #Trying to import the module using diffrent methods
+                #exec(f"import pages.ticks.{name} as {id}")
+
+                #module = __import__(f"pages.ticks.{name}")
+                #print(module)
+                #globals()[id] = module
+
+                module = importlib.import_module(f"pages.ticks.{name}")
+                globals()[id] = module
+
+                self.ticks[tick] = id
+                
     
     def switchToPage(self, page) :
         j = self.pages[page]
@@ -137,13 +160,29 @@ class pages :
         self.activePage = j
         self.activePageName = page
 
+        self.tickingItems = {}
+
         for button in buttons :
             buttonJ = buttons[button]
 
             key = self.controller.screen[button]
             key.setCaption(buttonJ["caption"])
             key.background = self.images[buttonJ["background"]]
+            key.fontSize = buttonJ["fontSize"]
+            key.fontColor = buttonJ["color"]
 
+            if "ticks" in buttonJ :
+                #self.tickingItems[button] = "hello"
+                t = {}
+
+                for tick in buttonJ["ticks"] :
+                    t[tick] = {"action": buttonJ["ticks"][tick], "lastTrigger": 0, "nextTrigger": 0}
+                
+                self.tickingItems[button] = t
+        
+        #print(self.tickingItems)
+
+        #self.tick()
         self.controller.sendScreenToDevice()
     
     def triggerAction(self, coords, action, actionData) :
@@ -151,6 +190,10 @@ class pages :
 
         if action == "switchPage" :
             self.switchToPage(actionData)
+        elif action == "exit" :
+            self.controller.deck.reset()
+            self.controller.deck.close()
+            sys.exit()
     
     def clickHandler(self, deck, keyIndex, state) :
         x = (keyIndex % self.controller.width)
@@ -160,14 +203,60 @@ class pages :
         self.controller.screen[coords].activated = state #Triggers the click 'animation'.
         self.controller.screen[coords].sendToDevice()
 
-        try :
-            button = self.activePage["buttons"][coords]
+        if not state : #Wait until the button is released
+            try :
+                button = self.activePage["buttons"][coords]
             
-            for action in button["actions"] :
-                actionData = button["actions"][action]
-                self.triggerAction(coords, action, actionData)
-        except KeyError :
-            pass
+                for action in button["actions"] :
+                    actionData = button["actions"][action]
+                    self.triggerAction(coords, action, actionData)
+
+                if coords in self.tickingItems : #Triggers tick function on ticking buttons
+                    ticks = self.tickingItems[coords]
+                    
+                    for tick in ticks :
+                        tickID = self.ticks[tick]
+
+                        tickModule = globals()[tickID]
+                        tickModule.keyPress(coords, self.activePageName, self.controller.serial)
+
+
+            except KeyError :
+                pass
+    
+    def tick(self) :
+        for button in self.tickingItems :
+            ticks = self.tickingItems[button]
+            for tick in ticks :
+                tickID = self.ticks[tick]
+                action = ticks[tick]["action"]
+                nextTrigger = ticks[tick]["nextTrigger"]
+
+                if time.time() > nextTrigger :
+
+                    tickModule = globals()[tickID]
+
+                    newState = tickModule.getKeyState(button, self.activePageName, self.controller.serial, action)
+                    key = self.controller.screen[button]
+
+                    if "caption" in newState :
+                        key.caption = newState["caption"]
+                    
+                    if "fontColor" in newState :
+                        key.fontColor = newState["fontColor"]
+
+                    if "fontSize" in newState :
+                        key.fontSize = newState["fontSize"]
+                    
+                    if len(newState["actions"]) > 0 :
+                        for action in newState["actions"] :
+                            actionData = newState["actions"][action]
+                            self.triggerAction(button, action, actionData)
+                        self.controller.sendScreenToDevice()
+                    else :
+                        key.sendToDevice()
+                    
+                    ticks[tick]["nextTrigger"] = time.time() + tickModule.nextTickWait(button, self.activePageName, self.controller.serial) 
 
 
 # ------------------------ #
@@ -199,4 +288,5 @@ if __name__ == "__main__" :
         p.switchToPage("page1.json")
 
         while True :
-            time.sleep(10)
+            time.sleep(.5)
+            p.tick()
