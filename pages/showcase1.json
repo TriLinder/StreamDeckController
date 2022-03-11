@@ -1,0 +1,24 @@
+{
+    "images": ["blank", "white.jpg"],
+    "ticks": ["clock.py"],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+        "0x0" : {"caption":"This", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "1x0" : {"caption":"is", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "2x0" : {"caption":"the", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "3x0" : {"caption":"Stream\nDeck", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "4x0" : {"caption":"Controller.", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+
+        "2x1" : {"caption":"00:00", "fontSize":14, "color":"white", "background":"blank", "actions":{"none":""}, "ticks":{"clock.py":"clock"}},
+        "3x1" : {"caption":"<--\nPress to\nchange format", "fontSize":10, "color":"white", "background":"blank", "actions":{"none":""}},
+        "1x1" : {"caption":"-->\nPress to\nchange format", "fontSize":10, "color":"white", "background":"blank", "actions":{"none":""}},
+
+        "2x2" : {"caption":"NEXT", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"switchPage":"showcase2.json"}},
+        "0x2" : {"caption":"", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "1x2" : {"caption":"", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "3x2" : {"caption":"", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "4x2" : {"caption":"", "fontSize":14, "color":"black", "background":"white.jpg", "actions":{"none":""}}
+    }
+}

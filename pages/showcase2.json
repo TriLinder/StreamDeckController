@@ -1,0 +1,16 @@
+{
+    "images": ["blank", "white.jpg"],
+    "ticks": ["clock.py"],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+        "1x1" : {"caption":"COOL", "fontSize":12, "color":"black", "fontAlignment":"bottom", "background":"white.jpg", "actions":{"none":""}},
+        "2x1" : {"caption":"TEXT", "fontSize":12, "color":"black", "fontAlignment":"center", "background":"white.jpg", "actions":{"none":""}},
+        "3x1" : {"caption":"ALIGNMENT", "fontSize":12, "color":"black", "fontAlignment":"top", "background":"white.jpg", "actions":{"none":""}},
+        "0x1" : {"caption":"", "fontSize":12, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+        "4x1" : {"caption":"", "fontSize":12, "color":"black", "background":"white.jpg", "actions":{"none":""}},
+
+        "2x2" : {"caption":"NEXT", "fontSize":14, "color":"white", "background":"blank", "actions":{"switchPage":"showcase3.json"}}
+    }
+}

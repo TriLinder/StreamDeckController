@@ -1,0 +1,31 @@
+{
+    "images": ["blank","clouds1.jpg", "clouds2.jpg",
+                "clouds3.jpg","clouds4.jpg",
+                "clouds5.jpg","clouds6.jpg",
+                "clouds7.jpg","clouds8.jpg",
+                "clouds9.jpg","clouds10.jpg",
+                "clouds11.jpg","clouds12.jpg",
+                "clouds13.jpg","clouds14.jpg",
+                "clouds15.jpg"],
+    "ticks": [],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+        "0x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds1.jpg", "actions":{"none":""}},
+        "1x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds2.jpg", "actions":{"none":""}},
+        "2x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds3.jpg", "actions":{"none":""}},
+        "3x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds4.jpg", "actions":{"none":""}},
+        "4x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds5.jpg", "actions":{"none":""}},
+        "0x1" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds6.jpg", "actions":{"none":""}},
+        "1x1" : {"caption":"25%", "fontSize":20, "color":"black", "background":"clouds7.jpg", "actions":{"setBrightness":25}},
+        "2x1" : {"caption":"50%", "fontSize":20, "color":"black", "background":"clouds8.jpg", "actions":{"setBrightness":50}},
+        "3x1" : {"caption":"75%", "fontSize":20, "color":"black", "background":"clouds9.jpg", "actions":{"setBrightness":75}},
+        "4x1" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds10.jpg", "actions":{"none":""}},
+        "0x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds11.jpg", "actions":{"none":""}},
+        "1x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds12.jpg", "actions":{"none":""}},
+        "2x2" : {"caption":"NEXT", "fontSize":12, "color":"black", "background":"clouds13.jpg", "actions":{"switchPage":"showcase4.json"}},
+        "3x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds14.jpg", "actions":{"none":""}},
+        "4x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds15.jpg", "actions":{"none":""}}
+    }
+}

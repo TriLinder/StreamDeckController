@@ -1,16 +1,18 @@
-from time import localtime, strftime, sleep
+from time import localtime, strftime
 
 format = 0
-formats = ["%H:%M:%S", "%H:%M", "   %d.%m\n%H:%M:%S"]
+formats = ["%H:%M:%S", "%H:%M", "%d.%m\n%H:%M:%S"]
 
 def nextTickWait(coords, page, serial) :
-    return 1 #Time until next tick in seconds
+    return 1 #Time until the next tick in seconds
 
-def getKeyState(coords, page, serial, action) :
+def getKeyState(coords, page, serial, action) : #Runs every tick
+    #print(coords, page, serial, action)
+
     if action == "clock" :
         return {"caption": strftime(formats[format], localtime()),
-                "fontSize": 12,
-                "fontColor": "black",
+                "fontSize": 14,
+                "fontColor": "white",
                 "actions": {}}
 
 def keyPress(coords, page, serial) : #Cycle through time formats on keypress

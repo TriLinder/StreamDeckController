@@ -2,9 +2,11 @@ from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from PIL import Image, ImageDraw, ImageFont
 import subprocess
+import webbrowser
 import importlib
 import platform
 import keyboard
+import random
 import uuid
 import json
 import math
@@ -27,7 +29,9 @@ class button :
         self.fontSize = 14
         self.fontColor = "white"
         self.activated = False
-        self.font = "C:\\Windows\\Fonts\\Arial.ttf"
+        self.font = controller.font
+        self.fontAlignment = "center"
+        #self.font = "C:\\Windows\\Fonts\\Arial.ttf"
 
         self.background = Image.new("RGB", (controller.buttonRes, controller.buttonRes))
     
@@ -58,7 +62,15 @@ class button :
             fontSize = fontSize / 1.25
 
         font = ImageFont.truetype(self.font, round(fontSize)) #Also resizing the text over here
-        draw.text((image.width / 2, image.height / 2), text=self.caption, font=font, anchor="ms", fill=self.fontColor)
+
+        if self.fontAlignment == "center" :
+            y = image.height / 2
+        elif self.fontAlignment == "top" :
+            y = self.fontSize
+        elif self.fontAlignment == "bottom" :
+            y = image.height - self.fontSize
+
+        draw.text((image.width / 2, y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
 
         image = PILHelper.to_native_format(self.controller.deck, image)
 
@@ -72,7 +84,7 @@ class button :
         self.caption = f"{self.keyIndex} - {self.coords}"
 
 class controller :
-    def __init__(self, deck) :
+    def __init__(self, deck, font) :
         self.deck = deck
 
         deck.open()
@@ -83,6 +95,7 @@ class controller :
         self.width = deck.key_layout()[1]
         self.serial = deck.get_serial_number()
         self.buttonRes = deck.key_image_format()["size"][0] #The resolution of a single button
+        self.font = font
 
         self.resetScreen()
 
@@ -102,11 +115,20 @@ class controller :
     def setKeyCallback(self, func) :
         self.deck.set_key_callback(func)
     
-    def coordsCaptions(self) :
+    def coordsCaptions(self, clearScreen) :
+
+        if clearScreen :
+            self.resetScreen()
+
+        for key in self.screen :
+            if self.screen[key].caption == "" or clearScreen : 
+                self.screen[key].coordsCaption()
+    
+    def randomColors(self) :
         self.resetScreen()
 
         for key in self.screen :
-            self.screen[key].coordsCaption()
+            self.screen[key].background = Image.new("RGB", (self.buttonRes, self.buttonRes), (random.randint(0,255), random.randint(0,255), random.randint(0,255)))
 
 class pages :
     def __init__(self, controller) :
@@ -174,14 +196,20 @@ class pages :
         self.controller.screen["0x0"].caption = screenError
         self.controller.screen["0x0"].fontColor = "black"
         self.controller.screen["0x0"].background = Image.new("RGB", (self.controller.buttonRes, self.controller.buttonRes), (255, 255, 255))
-        self.controller.screen["1x0"].caption = " See log\nfor details"
+        self.controller.screen["1x0"].caption = "See log\nfor details"
         self.controller.sendScreenToDevice()
 
         self.activePage = {"buttons":{"1x0": {"actions": {"openTxt":"errorLog.txt"}}}}
         self.activePageName = "**error**"
 
-        with open("errorLog.txt", "a") as f :
-            f.write(f"{logError}\n")
+        print(f"[ERROR] {logError}")
+
+        try :
+            with open("errorLog.txt", "a") as f :
+                f.write(f"{logError}\n")
+        except :
+            if not logError == "Could not write to log." :
+                self.error("I/O\nError", "Could not write to log.")
     
     def switchToPage(self, page) :
         if self.activePageName == "**error**" : #Make sure you can't switch the page when in error state. Doing so would probably break something
@@ -225,6 +253,11 @@ class pages :
             key.fontSize = buttonJ["fontSize"]
             key.fontColor = buttonJ["color"]
 
+            try :
+                key.fontAlignment = buttonJ["fontAlignment"]
+            except KeyError :
+                key.fontAlignment = "center"
+
             if "ticks" in buttonJ :
                 #self.tickingItems[button] = "hello"
                 t = {}
@@ -247,15 +280,17 @@ class pages :
         elif action == "exit" :
             self.controller.deck.reset()
             self.controller.deck.close()
-            sys.exit()
+            os.exit()
+            quit()
+            sys.exit() #Sometimes doesn't quit, see https://stackoverflow.com/questions/66831613/python-script-not-stopping-on-sys-exit
         elif action == "setBrightness" :
             self.controller.deck.set_brightness(int(actionData))
         elif action == "showCoords" :
-            self.controller.coordsCaptions()
+            self.controller.coordsCaptions(actionData)
             self.controller.sendScreenToDevice()
         elif action == "runCommand" :
             subprocess.call(str(actionData), stderr=subprocess.DEVNULL)
-        elif action == "openTxt" :
+        elif action == "openTxt" : #Should only be used on the error screen.
             system = platform.system().lower()
 
             if system == 'windows' or system == 'darwin' :
@@ -266,7 +301,11 @@ class pages :
             keyboard.write(actionData)
         elif action == "keyboardShortcut" :
             keyboard.send(actionData)
-
+        elif action == "openURL" :
+            webbrowser.open(actionData)
+        elif action == "randomColors" :
+            self.controller.randomColors()
+            self.controller.sendScreenToDevice()
 
     
     def clickHandler(self, deck, keyIndex, state) :
@@ -374,10 +413,10 @@ if __name__ == "__main__" :
     streamdecks = DeviceManager().enumerate()
 
     for index, deck in enumerate(streamdecks) :
-        c = controller(deck)
+        c = controller(deck, "C:\\Windows\\Fonts\\Arial.ttf")
 
         p = pages(c)
-        p.switchToPage("page1.json")
+        p.switchToPage("welcome.json")
 
         while True :
             time.sleep(.5)

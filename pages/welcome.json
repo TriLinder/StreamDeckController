@@ -1,0 +1,16 @@
+{
+    "images": ["arrow-left.png", "arrow-right.png", "line.jpg", "blank"],
+    "ticks": [],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+        "2x1" : {"caption":"Welcome", "fontSize":14, "color":"white", "background":"blank", "actions":{"switchPage":"showcase1.json"}},
+
+        "0x1" : {"caption":"", "fontSize":14, "color":"white", "background":"line.jpg", "actions":{"none":""}},
+        "1x1" : {"caption":"", "fontSize":14, "color":"white", "background":"arrow-right.png", "actions":{"none":""}},
+
+        "4x1" : {"caption":"", "fontSize":14, "color":"white", "background":"line.jpg", "actions":{"none":""}},
+        "3x1" : {"caption":"", "fontSize":14, "color":"white", "background":"arrow-left.png", "actions":{"none":""}}
+    }
+}

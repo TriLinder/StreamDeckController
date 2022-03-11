@@ -86,6 +86,7 @@ if __name__ == "__main__" :
     startingPage = getConfigKey("startingPage")
     startingBrighntess = getConfigKey("startingBrightness")
     deviceSerial = getConfigKey("deviceSerial")
+    font = getConfigKey("font")
 
     if deviceSerial == "selectOnStartup" :
         deviceSerial = chooseDevice(DeviceManager().enumerate())
@@ -98,14 +99,16 @@ if __name__ == "__main__" :
         if deck.get_serial_number() == deviceSerial :
             deck.close()
             
-            c = controller.controller(deck)
+            c = controller.controller(deck, font=font)
             deck.set_brightness(startingBrighntess)
 
             p = controller.pages(c)
             p.switchToPage(startingPage)
 
             while True :
-                time.sleep(.5)
+                time.sleep(.25)
                 p.tick()
 
         deck.close()
+    
+    print(f"Stream Deck device with the serial '{deviceSerial}' was not found.")

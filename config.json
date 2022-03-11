@@ -1,5 +1,6 @@
 {
-    "startingPage": "page1.json", 
-    "startingBrightness" : 75,
-    "deviceSerial": "selectOnStartup"
+    "startingPage": "welcome.json",
+    "startingBrightness": 75,
+    "deviceSerial": "selectOnStartup",
+    "font": "C:\\Windows\\Fonts\\Arial.ttf"
 }

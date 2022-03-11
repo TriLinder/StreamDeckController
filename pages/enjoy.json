@@ -1,0 +1,16 @@
+{
+    "images": ["blank"],
+    "ticks": [],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+        "2x1" : {"caption":"Enjoy!", "fontSize":14, "color":"white", "background":"blank", "actions":{"switchPage":"enjoy.json"}},
+
+        "0x0" : {"caption":"Show\ncoordinates", "fontSize":14, "color":"#292929", "background":"blank", "actions":{"showCoords":true}},
+        "4x0" : {"caption":"Cool\ncolors", "fontSize":14, "color":"#292929", "background":"blank", "actions":{"randomColors":""}},
+
+        "0x2" : {"caption":"Source\ncode", "fontSize":14, "color":"#292929", "background":"blank", "actions":{"openURL":"https://github.com/TriLinder/StreamDeckController"}},
+        "4x2" : {"caption":"Start\nover", "fontSize":14, "color":"#292929", "background":"blank", "actions":{"switchPage":"welcome.json"}}
+    }
+}
