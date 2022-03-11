@@ -66,9 +66,15 @@ class button :
         if self.fontAlignment == "center" :
             y = image.height / 2
         elif self.fontAlignment == "top" :
-            y = self.fontSize
+            if not self.activated : #Move text down when in activated mode
+                y = self.fontSize
+            else :
+                y = self.fontSize + (self.controller.buttonRes / 8) 
         elif self.fontAlignment == "bottom" :
-            y = image.height - self.fontSize
+            if not self.activated : #Move text down when in activated mode
+                y = image.height - self.fontSize
+            else :
+                y = image.height - self.fontSize - (self.controller.buttonRes / 8)
 
         draw.text((image.width / 2, y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
 
