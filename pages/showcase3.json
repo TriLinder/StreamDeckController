@@ -12,19 +12,24 @@
     "created": 1646871751,
     
     "buttons": {
-        "0x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds1.jpg", "actions":{"none":""}},
+        "0x0" : {"caption":"Image source", "fontSize":9, "color":"gray", "fontAlignment":"top", "background":"clouds1.jpg", "actions":{"openURL":"https://pixabay.com/photos/clouds-sky-atmosphere-blue-sky-7050884/"}},
+
         "1x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds2.jpg", "actions":{"none":""}},
         "2x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds3.jpg", "actions":{"none":""}},
         "3x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds4.jpg", "actions":{"none":""}},
         "4x0" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds5.jpg", "actions":{"none":""}},
         "0x1" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds6.jpg", "actions":{"none":""}},
+
         "1x1" : {"caption":"25%", "fontSize":20, "color":"black", "background":"clouds7.jpg", "actions":{"setBrightness":25}},
         "2x1" : {"caption":"50%", "fontSize":20, "color":"black", "background":"clouds8.jpg", "actions":{"setBrightness":50}},
         "3x1" : {"caption":"75%", "fontSize":20, "color":"black", "background":"clouds9.jpg", "actions":{"setBrightness":75}},
+
         "4x1" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds10.jpg", "actions":{"none":""}},
         "0x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds11.jpg", "actions":{"none":""}},
         "1x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds12.jpg", "actions":{"none":""}},
+
         "2x2" : {"caption":"NEXT", "fontSize":12, "color":"black", "background":"clouds13.jpg", "actions":{"switchPage":"showcase4.json"}},
+        
         "3x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds14.jpg", "actions":{"none":""}},
         "4x2" : {"caption":"", "fontSize":12, "color":"black", "background":"clouds15.jpg", "actions":{"none":""}}
     }
