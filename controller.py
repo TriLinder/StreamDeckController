@@ -29,7 +29,7 @@ class button :
         self.fontSize = 14
         self.fontColor = "white"
         self.activated = False
-        self.font = controller.font
+        self.font = controller.fontName
         self.fontAlignment = "center"
         #self.font = "C:\\Windows\\Fonts\\Arial.ttf"
 
@@ -61,22 +61,31 @@ class button :
         if self.activated :
             fontSize = fontSize / 1.25
 
-        font = ImageFont.truetype(self.font, round(fontSize)) #Also resizing the text over here
+        if not self.caption.strip() == "" :
 
-        if self.fontAlignment == "center" :
-            y = image.height / 2
-        elif self.fontAlignment == "top" :
-            if not self.activated : #Move text down when in activated mode
-                y = self.fontSize
-            else :
-                y = self.fontSize + (self.controller.buttonRes / 8) 
-        elif self.fontAlignment == "bottom" :
-            if not self.activated : #Move text down when in activated mode
-                y = image.height - self.fontSize
-            else :
-                y = image.height - self.fontSize - (self.controller.buttonRes / 8)
+            try :
+                font = self.controller.getFont(self.font, fontSize) #Load font from memory
+            except Exception as e :
+                font = None
+                self.caption = "NO\nFONT" #Font loading failed. Throw an error
+                self.fontColor = "white"
+        
+            w, h= draw.textsize(self.caption, font=font)
 
-        draw.text((image.width / 2, y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
+            if self.fontAlignment == "center" :
+                y = ((image.height - h) / 2)
+            elif self.fontAlignment == "top" :
+                if not self.activated : #Move text towards the center when in activated mode
+                    y = h
+                else :
+                    y = h + (self.controller.buttonRes / 8) 
+            elif self.fontAlignment == "bottom" :
+                if not self.activated : #Move text towards the center when in activated mode
+                    y = image.height - h
+                else :
+                    y = image.height - h - (self.controller.buttonRes / 8)
+
+            draw.text((image.width / 2, y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
 
         image = PILHelper.to_native_format(self.controller.deck, image)
 
@@ -101,9 +110,26 @@ class controller :
         self.width = deck.key_layout()[1]
         self.serial = deck.get_serial_number()
         self.buttonRes = deck.key_image_format()["size"][0] #The resolution of a single button
-        self.font = font
+        self.fontName = font
+        self.fonts = {}
 
         self.resetScreen()
+    
+    def getFontPath(self, fontName) :
+        path = os.path.dirname(sys.argv[0]) #Path to this .py file
+        path = os.path.join(path, "fonts", fontName)
+        print(path)
+        return path
+    
+    def getFont(self, fontName, size) :
+        fontKey = f"{fontName}-{size}"
+
+        if fontKey in self.fonts :
+            return self.fonts[fontKey]
+        
+        font = ImageFont.truetype(self.getFontPath(fontName), round(size))
+        self.fonts[fontKey] = font
+        return font
 
     def resetScreen(self) :
         d = {}
@@ -415,7 +441,7 @@ def helloWorldTest() :
 
 # ------------------------ #
            
-if __name__ == "__main__" :
+if __name__ == "__main__" and False : #Disabled
     streamdecks = DeviceManager().enumerate()
 
     for index, deck in enumerate(streamdecks) :

@@ -2,5 +2,5 @@
     "startingPage": "welcome.json",
     "startingBrightness": 75,
     "deviceSerial": "selectOnStartup",
-    "font": "C:\\Windows\\Fonts\\Arial.ttf"
+    "font": "yourFont.ttf"
 }
