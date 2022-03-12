@@ -118,7 +118,6 @@ class controller :
     def getFontPath(self, fontName) :
         path = os.path.dirname(sys.argv[0]) #Path to this .py file
         path = os.path.join(path, "fonts", fontName)
-        print(path)
         return path
     
     def getFont(self, fontName, size) :
