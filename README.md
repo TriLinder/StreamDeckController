@@ -264,11 +264,11 @@ You should see that your button got a nice new background. But it's still not do
 
 Actions are triggered by pressing a button or by plugins (ticks).
 
-As of this version the program has 10 actions built in.
+As of this version the program has 10 actions built-in.
 
 | **ACTION**         | **INPUT**              | **DESCRIPTION**                                                                                   |
 |:------------------:|:----------------------:|:-------------------------------------------------------------------------------------------------:|
-| `switchPage`       | `str` - Page name      | Switches to a page                                                                                |
+| `switchPage`       | `str` - Page file name | Switches to a page                                                                                |
 | `exit`             | NONE                   | Exits the program                                                                                 |
 | `setBrightness`    | `int` - Brightness     | Sets the Stream Deck's brightness                                                                 |
 | `showCoords`       | `bool` - Overwrite     | Set's each button's caption to it's coordinates. If `false` won't overwrite existing captions.    |
@@ -278,3 +278,83 @@ As of this version the program has 10 actions built in.
 | `keyboardShortcut` | `str` - Shortcut       | Executes a keyboard shortcut, such as `CTRL + A`                                                  |
 | `openURL`          | `str` - URL            | Opens a URL                                                                                       |
 | `randomColors`     | NONE                   | Fills the screen with random colors, as seen on the first picture.                                |
+
+You can trigger any of theese actions with a button by adding it to it's `actions` key.
+
+Let's go back to our button we created in `test1.json`
+
+```json
+"0x0" : {"caption":"Hello,\nworld.",
+        "fontSize":12, 
+        "color":"white", 
+        "fontAlignment":"center", 
+        "background":"dice.png", 
+        "actions":{
+                    "none":""
+                  }
+}
+```
+
+We'll set the button to fill the screen with random colors using the `randomColors` action.
+
+All we need to do is add it to the button's `actions` key.
+
+```json
+"0x0" : {"caption":"Hello,\nworld.",
+        "fontSize":12, 
+        "color":"white", 
+        "fontAlignment":"center", 
+        "background":"dice.png", 
+        "actions":{
+                    "randomColors":""
+                  }
+}
+```
+
+ As `randomColors` doesn't require any inputs, you can set it to whatever you want.
+
+Save the file as always and run `main.py` to see the changes.
+
+‎
+
+When the button is pressed, the screen should flash with random colors.
+
+Congrats! Your button is now working!
+
+But we can't see it very clearly, how about we set the brightness a little bit higher?
+
+‎
+
+All we need to do is to modify the button again and add the `setBrightness` action.
+
+```json
+"actions":{
+            "randomColors":"",
+            "setBrightness": 100
+          }
+```
+
+According to the table above, `setBrightness` requires input in the form of an integer, so we need to give such input.
+
+‎
+
+Save the file, run `main.py`, observe the results.
+
+When pressed, your console output should look something like this.
+
+```shell
+0x0 randomColors
+0x0 setBrightness 100
+```
+
+This means both actions were triggered successfully and the brightness was increased.
+
+‎
+
+If you can run the demo, you can test out all the actions in it. (`showcase4.json`)
+
+The most important action is `switchPage`, which switches to an entirely different page. I recommend looking through the demo's `.json` files to see the actions in action.
+
+‎
+
+But if you still feel limited by your options, you can write your own by making plugins.
