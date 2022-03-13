@@ -72,7 +72,7 @@ Under the `pages` directory you can find `empty.json`. Use this as a template fo
 }
 ```
 
-First let's start with editing the `dimensions` key. This is used to determine whether or not a page is suitable for the connected Stream Deck. It's in the simple format of `Width X Hight`, so the 15 button Stream Deck in the pictures above has the dimensions of `5x3`.
+First, let's start with editing the `dimensions` key. This is used to determine whether or not a page is suitable for the connected Stream Deck. It's in the simple format of `Width X Hight`, so the 15 button Stream Deck in the pictures above has the dimensions of `5x3`.
 
 ‏‏‎ ‎
 
@@ -82,13 +82,15 @@ The `created` key is a [UNIX tiestmap](https://en.wikipedia.org/wiki/Unix_time) 
 
 We'll get to the `images` and `ticks` keys later.
 
-‏‏‎ ‎‏‏‎ ‎
+‏‏
+
+---
 
 ### Adding buttons
 
 Now let's add some buttons.
 
-First however let's look at coordinates.
+First, however let's look at coordinates.
 
 | 0x0 | 1x0 | 2x0 | 3x0 | 4x0 |
 |:---:| --- | --- | --- | --- |
@@ -131,7 +133,7 @@ Let's examine our button a little closer.
         "actions":{
                     "none":""
                   }
-        }
+}
 ```
 
 The button is under the key `0x0`,  which you may recognize as coordinates. If we look at the table higher up, we can see that `0x0` corresponds to the top-left corner of our Stream Deck.
@@ -184,3 +186,78 @@ Now let's start `main.py` again.
 ‎
 
 If you've done everything correctly, you should see a simple blank page with `Hello, world.` in the top left.
+
+Congratulations! You've created your first page!
+
+But it's looking a bit dull, isn't it? Let's add some images.
+
+---
+
+## Adding images
+
+Adding new images is suprisingly easy. First, let's find an image to add, preferably something square-ish.
+
+‎
+
+What about this [dice vector drawing from Pixabay](https://pixabay.com/vectors/dice-cube-die-game-gamer-chance-152068/)? 
+
+It's not exactly square, but that doesn't matter as the software will scale it to fit the button.
+
+<img title="" src="readme_photos/dice_152068_pixabay.png" alt="dice_152068_pixabay.png" width="179" data-align="center">
+
+‎
+
+All we need is the lowest resolution version avaiable, as the Stream Deck display isn't that high-res.
+
+‎
+
+Download the `.png` file and place it inside the `pages/imgs` directory under the name `dice.png`
+
+‎
+
+Now let's open up `test1.json` again and add the image to the button.
+
+```json
+{
+    "images": ["blank"],
+    "ticks": [],
+    "dimensions": "5x3",
+    "created": 1646871751,
+
+    "buttons": {
+        "0x0" : {"caption":"Hello,\nworld.", "fontSize":12, "color":"white", "fontAlignment":"center", "background":"blank", "actions":{"none":""}}
+    }
+}
+```
+
+First we have to add the image to the `images` key at the top. You may get away with not doing this in some cases, but you should add it regardless.
+
+```json
+"images": ["blank", "dice.png"],
+```
+
+‎
+
+Then we go to our button and change the `background` key to our image.
+
+```json
+"0x0" : {"caption":"Hello,\nworld.",
+        "fontSize":12, 
+        "color":"white", 
+        "fontAlignment":"center", 
+        "background":"dice.png", 
+        "actions":{
+                    "none":""
+                  }
+}
+```
+
+Save the file and start `main.py` again.
+
+‎
+
+You should see that your button got a nice new background. But it's still not doing anything when pressed. Let's change that by adding actions.
+
+---
+
+## 3, 2, 1, Action!
