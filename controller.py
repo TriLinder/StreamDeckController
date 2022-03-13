@@ -331,7 +331,7 @@ class pages :
         elif action == "keyboardType" :
             keyboard.write(actionData)
         elif action == "keyboardShortcut" :
-            keyboard.send(actionData)
+            keyboard.send(actionData.lower())
         elif action == "openURL" :
             webbrowser.open(actionData)
         elif action == "randomColors" :

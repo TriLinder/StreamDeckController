@@ -72,7 +72,7 @@ Under the `pages` directory you can find `empty.json`. Use this as a template fo
 }
 ```
 
-First, let's start with editing the `dimensions` key. This is used to determine whether or not a page is suitable for the connected Stream Deck. It's in the simple format of `Width X Hight`, so the 15 button Stream Deck in the pictures above has the dimensions of `5x3`.
+First, let's start with editing the `dimensions` key. This is used to determine whether or not a page is suitable for the connected Stream Deck. It's in the simple format of `Width X Hight`, so the 15 button Stream Deck in the pictures above has the dimensions of `5x3`. Set this to your Stream Deck's dimensions.
 
 ‏‏‎ ‎
 
@@ -90,7 +90,7 @@ We'll get to the `images` and `ticks` keys later.
 
 Now let's add some buttons.
 
-First, however let's look at coordinates.
+First however, let's look at coordinates.
 
 | 0x0 | 1x0 | 2x0 | 3x0 | 4x0 |
 |:---:| --- | --- | --- | --- |
@@ -195,13 +195,13 @@ But it's looking a bit dull, isn't it? Let's add some images.
 
 ## Adding images
 
-Adding new images is suprisingly easy. First, let's find an image to add, preferably something square-ish.
+Adding new images is pretty easy. First, let's find an image to add, preferably something square-ish.
 
 ‎
 
 What about this [dice vector drawing from Pixabay](https://pixabay.com/vectors/dice-cube-die-game-gamer-chance-152068/)? 
 
-It's not exactly square, but that doesn't matter as the software will scale it to fit the button.
+It's not exactly square, but that doesn't matter as the software will scale it to fit the button anyway.
 
 <img title="" src="readme_photos/dice_152068_pixabay.png" alt="dice_152068_pixabay.png" width="179" data-align="center">
 
@@ -238,7 +238,7 @@ First we have to add the image to the `images` key at the top. You may get away 
 
 ‎
 
-Then we go to our button and change the `background` key to our image.
+Then we go to our button and change the `background` key to add our image.
 
 ```json
 "0x0" : {"caption":"Hello,\nworld.",
@@ -261,3 +261,20 @@ You should see that your button got a nice new background. But it's still not do
 ---
 
 ## 3, 2, 1, Action!
+
+Actions are triggered by pressing a button or by plugins (ticks).
+
+As of this version the program has 10 actions built in.
+
+| **ACTION**         | **INPUT**              | **DESCRIPTION**                                                                                   |
+|:------------------:|:----------------------:|:-------------------------------------------------------------------------------------------------:|
+| `switchPage`       | `str` - Page name      | Switches to a page                                                                                |
+| `exit`             | NONE                   | Exits the program                                                                                 |
+| `setBrightness`    | `int` - Brightness     | Sets the Stream Deck's brightness                                                                 |
+| `showCoords`       | `bool` - Overwrite     | Set's each button's caption to it's coordinates. If `false` won't overwrite existing captions.    |
+| `runCommand`       | `str` - Command to run | Runs a shell command, such as `ping 1.1.1.1`                                                      |
+| `openTxt`          | `str` - Path           | Opens a `.txt` file in an editor. Used by error screens and **should not be used** anywhere else. |
+| `keyboardType`     | `str` - Text           | Types a text by acting as a keyboard.                                                             |
+| `keyboardShortcut` | `str` - Shortcut       | Executes a keyboard shortcut, such as `CTRL + A`                                                  |
+| `openURL`          | `str` - URL            | Opens a URL                                                                                       |
+| `randomColors`     | NONE                   | Fills the screen with random colors, as seen on the first picture.                                |
