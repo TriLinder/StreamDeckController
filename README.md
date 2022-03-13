@@ -353,8 +353,94 @@ This means both actions were triggered successfully and the brightness was incre
 
 If you can run the demo, you can test out all the actions in it. (`showcase4.json`)
 
-The most important action is `switchPage`, which switches to an entirely different page. I recommend looking through the demo's `.json` files to see the actions in action.
+**The most important action** is `switchPage`, which switches to an entirely different page. I recommend looking through the demo's `.json` files to see the actions in action.
 
 ‎
 
 But if you still feel limited by your options, you can write your own by making plugins.
+
+---
+
+## Plugins
+
+This is what most of you were probably waiting for. Plugins.
+
+If you went through the demo, or saw my [Reddit post](https://www.reddit.com/r/elgato/comments/tcjzte/made_an_opensource_alternative_to_the_official/), you possibly noticed a clock on the 2nd page (`showcase1.json`).
+
+But if you paid attention above, you'd know that a clock action doesn't exist.
+
+‎
+
+So how is this even possible? Well the answer seems kinda obvious now, it's done using a simple plugin.
+
+‎
+
+Plugins are located under the `pages/ticks` directory.
+
+As you can see the demo in fact includes a `clock.py`, so let's take a look at it.
+
+```python
+from time import localtime, strftime
+
+format = 0
+formats = ["%H:%M:%S", "%H:%M", "%d.%m\n%H:%M:%S"]
+
+def nextTickWait(coords, page, serial) :
+    return 1 #Time until the next tick in seconds
+
+def getKeyState(coords, page, serial, action) : #Runs every tick
+    #print(coords, page, serial, action)
+
+    if action == "clock" :
+        return {"caption": strftime(formats[format], localtime()),
+                "fontSize": 14,
+                "fontColor": "white",
+                "actions": {}}
+
+def keyPress(coords, page, serial) : #Cycle through time formats on keypress
+    global format
+    format += 1
+
+    if format+1 > len(formats) :
+        format = 0
+```
+
+And this is how the clock button under `showcase1.json` looks.
+
+```json
+"2x1" : {"caption":"00:00", 
+        "fontSize":14, 
+        "color":"white", 
+        "background":"blank", 
+        "actions":{"none":""}, 
+        "ticks":{
+                    "clock.py":"clock"
+                }
+       }
+```
+
+But first don't forget to add the plugin's file name to the `ticks` key of every page where it's used.
+
+```json
+"images": ["blank", "white.jpg"],
+"ticks": ["clock.py"],
+```
+
+‎
+
+But how does it work? Let's create our own plugin for dice rolls.
+
+‎
+
+First, let's create a `dice.py` under the `pages/ticks` directory.
+
+Now let's type some simple code to generate a random dice roll.
+
+```python
+import random #Imports the random module, used for generating random numbers
+
+def generateDiceRoll(): #A function to generate a dice roll
+    return random.randint(1, 6) #Return a random number from 1 to 6.
+```
+
+This is nice, but it still can't communicate with the Stream Deck. So let's connect it.
