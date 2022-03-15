@@ -428,7 +428,7 @@ But first don't forget to add the plugin's file name to the `ticks` key of every
 
 ‎
 
-But how does it work? Let's create our own plugin for dice rolls.
+But how does it work? **Let's create our own plugin** for dice rolls.
 
 ‎
 
@@ -444,3 +444,106 @@ def generateDiceRoll(): #A function to generate a dice roll
 ```
 
 This is nice, but it still can't communicate with the Stream Deck. So let's connect it.
+
+First let's show some text, any text from the plugin on the Stream Deck.
+
+‎
+
+Back in `test1.json` we'll first have to add our new plugin to the `ticks` key.
+
+```json
+{
+    "images": ["blank", "dice.png"],
+    "ticks": ["dice.py"],
+    "dimensions": "5x3",
+    "created": 1646871751,
+    
+    "buttons": {
+		"0x0" : {"caption":"Hello,\nworld.", "fontSize":12, "color":"white", "fontAlignment":"center", "background":"dice.png", "actions":{"randomColors":"", "setBrightness":100}}
+    }
+}
+```
+
+Now we'll modify our button again to work with the plugin.
+
+We'll start by removing all the actions, so it doesn't do anything when pressed.
+
+```json
+"0x0" : {"caption":"Hello,\nworld.",
+        "fontSize":12, 
+        "color":"white", 
+        "fontAlignment":"center", 
+        "background":"dice.png", 
+        "actions":{},
+}
+```
+
+Now we'll add the `ticks` key.
+
+```json
+"0x0" : {"caption":"Hello,\nworld.",
+        "fontSize":12, 
+        "color":"white", 
+        "fontAlignment":"center", 
+        "background":"dice.png", 
+        "actions":{},
+        "ticks": {
+                    "dice.py":"diceRoll"
+                }
+}
+```
+
+The syntax above says: every tick ask `dice.py` for updates with the `diceRoll` custom action.
+
+‎
+
+Now we can return to our `dice.py` file and continue programming.
+
+Before outputting anything to the Stream Deck, we need to tell Stream Deck Controller how often to ask our program for output.
+
+```python
+def nextTickWait(coords, page, serial): #A function called by the Stream Deck Controller
+    return 1 #Time until next tick in seconds
+```
+
+The function above is called after every tick to determine how long to wait for the next one. In our case we only need 1 TPS (tick per second), but you can dynamically change the value if you want to.
+
+The TPS cannot be higher than the value of  `maxTPS` in `config.json`.
+
+Now that a TPS is set, we can finally respond to ticks by sending output.
+
+```python
+import random #Imports the random module, used for generating random numbers
+
+caption = "Press to\nroll the dice." #Caption (text) to display on the key
+
+def generateDiceRoll(): #A function to generate a dice roll
+    return random.randint(1, 6) #Return a random number from 1 to 6.
+
+def nextTickWait(coords, page, serial): #A function called by the Stream Deck Controller
+    return 1 #Time until next tick in seconds
+
+def getKeyState(coords, page, serial, action): #Runs every tick
+    if action == "diceRoll": #Check the correct action was called
+        return {"caption":caption,
+                "fontSize": 12,
+                "fontColor": "white",
+                "actions": {}
+        }
+```
+
+We have added a new function: `getKeyState`, which is called once every tick.
+
+First, we check that the correct custom action is called with the `if` statement.
+
+Then we return a dictionary with new values for our button.
+
+All of the keys in the dictionary are optional.
+
+| **KEY**      | **FORMAT**       | **EXPLANATION** |
+| ------------ |:----------------:|:---------------:|
+| `caption`    | `str`            | A               |
+| `background` | `PIL Image`      |                 |
+| `fontColor`  | `str`            |                 |
+| `fontSize`   | `int` or `float` |                 |
+| `actions`    | `dict`           |                 |
