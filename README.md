@@ -238,7 +238,7 @@ First we have to add the image to the `images` key at the top. You may get away 
 
 ‎
 
-Then we go to our button and change the `background` key to add our image.
+Then we'll go to our button and change the `background` key to add our image.
 
 ```json
 "0x0" : {"caption":"Hello,\nworld.",
@@ -457,9 +457,9 @@ Back in `test1.json` we'll first have to add our new plugin to the `ticks` key.
     "ticks": ["dice.py"],
     "dimensions": "5x3",
     "created": 1646871751,
-    
+
     "buttons": {
-		"0x0" : {"caption":"Hello,\nworld.", "fontSize":12, "color":"white", "fontAlignment":"center", "background":"dice.png", "actions":{"randomColors":"", "setBrightness":100}}
+        "0x0" : {"caption":"Hello,\nworld.", "fontSize":12, "color":"white", "fontAlignment":"center", "background":"dice.png", "actions":{"randomColors":"", "setBrightness":100}}
     }
 }
 ```
@@ -540,10 +540,12 @@ Then we return a dictionary with new values for our button.
 
 All of the keys in the dictionary are optional.
 
-| **KEY**      | **FORMAT**       | **EXPLANATION** |
-| ------------ |:----------------:|:---------------:|
-| `caption`    | `str`            | A               |
-| `background` | `PIL Image`      |                 |
-| `fontColor`  | `str`            |                 |
-| `fontSize`   | `int` or `float` |                 |
-| `actions`    | `dict`           |                 |
+| **KEY**      | **FORMAT**       |
+| ------------ |:----------------:|
+| `caption`    | `str`            |
+| `background` | `PIL Image`      |
+| `fontColor`  | `str`            |
+| `fontSize`   | `int` or `float` |
+| `actions`    | `dict`           |
+
+If we start main.py, we can see that the text is in fact displayed.
