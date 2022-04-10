@@ -413,9 +413,7 @@ And this is how the clock button under `showcase1.json` looks.
         "color":"white", 
         "background":"blank", 
         "actions":{"none":""}, 
-        "ticks":{
-                 "clock.py":"clock"
-                }
+        "ticks":{"clock.py":"clock"}
        }
 ```
 
