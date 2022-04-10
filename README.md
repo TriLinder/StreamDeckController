@@ -218,7 +218,7 @@ Download the `.png` file and place it inside the `pages/imgs` directory under th
 Now let's open up `test1.json` again and add the image to the button.
 
 ```json
-{
+blank{
     "images": ["blank"],
     "ticks": [],
     "dimensions": "5x3",
@@ -357,7 +357,7 @@ If you can run the demo, you can test out all the actions in it. (`showcase4.jso
 
 ‎
 
-But if you still feel limited by your options, you can write your own by making plugins.
+But if you still feel limited by your options, you can make your own by writing plugins.
 
 ---
 
@@ -405,7 +405,7 @@ def keyPress(coords, page, serial) : #Cycle through time formats on keypress
         format = 0
 ```
 
-And this is how the clock button under `showcase1.json` looks.
+makingAnd this is how the clock button under `showcase1.json` looks.
 
 ```json
 "2x1" : {"caption":"00:00", 
@@ -445,7 +445,7 @@ def generateDiceRoll(): #A function to generate a dice roll
 
 This is nice, but it still can't communicate with the Stream Deck. So let's connect it.
 
-First let's show some text, any text from the plugin on the Stream Deck.
+First let's show some text, any text, from the plugin on the Stream Deck.
 
 ‎
 
@@ -499,7 +499,7 @@ The syntax above says: every tick ask `dice.py` for updates with the `diceRoll` 
 
 Now we can return to our `dice.py` file and continue programming.
 
-Before outputting anything to the Stream Deck, we need to tell Stream Deck Controller how often to ask our program for output.
+Before outputing anything to the Stream Deck, we need to tell Stream Deck Controller how often to ask our program for output.
 
 ```python
 def nextTickWait(coords, page, serial): #A function called by the Stream Deck Controller
@@ -525,7 +525,7 @@ def nextTickWait(coords, page, serial): #A function called by the Stream Deck Co
 
 def getKeyState(coords, page, serial, action): #Runs every tick
     if action == "diceRoll": #Check the correct action was called
-        return {"caption":caption,
+        return {"caption": str(caption),
                 "fontSize": 12,
                 "fontColor": "white",
                 "actions": {}
@@ -548,4 +548,36 @@ All of the keys in the dictionary are optional.
 | `fontSize`   | `int` or `float` |
 | `actions`    | `dict`           |
 
-If we start main.py, we can see that the text is in fact displayed.
+If we start main.py, we can see that the text is in fact displayed. 
+
+But the program crashes when the button is pressed. That's because our plugin is missing a `keyPress` function, so the program doesn't know what to do when the button is pressed.
+
+```python
+def keyPress(coords, page, serial):
+    global caption
+    caption = generateDiceRoll()
+```
+
+There we go! 
+
+The `keyPress` function gets called when the button is pressed.
+
+When called, the function sets the global `caption` variable to a random number, and the caption gets sent to the device next tick from the `getKeyState` function.
+
+
+
+Let's restart the program and see if it works!
+
+If you've done everything correctly, your plugin should now work.
+
+You are now ready to use Stream Deck Controller. Good luck!
+
+---
+
+## Last notes
+
+Sorry for the huge delay for relasing the program. I just couldn't get around to finishing the last few lines of this README. I also just didn't expect to get this amount of attention on Reddit.
+
+
+
+If you find a bug, please create an issue for it. Thanks for reading through this and have a great day.
