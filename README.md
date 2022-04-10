@@ -415,7 +415,7 @@ And this is how the clock button under `showcase1.json` looks.
         "actions":{"none":""}, 
         "ticks":{
                  "clock.py":"clock"
-}
+                }
        }
 ```
 
@@ -487,9 +487,7 @@ Now we'll add the `ticks` key.
         "fontAlignment":"center", 
         "background":"dice.png", 
         "actions":{},
-        "ticks": {
-                    "dice.py":"diceRoll"
-                }
+        "ticks": {"dice.py":"diceRoll"}
 }
 ```
 
@@ -574,7 +572,7 @@ You are now ready to use Stream Deck Controller. Good luck!
 
 ---
 
-## Last notes
+## Final notes
 
 Sorry for the huge delay for relasing the program. I just couldn't get around to finishing the last few lines of this README. I also just didn't expect to get this amount of attention on Reddit.
 
