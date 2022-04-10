@@ -85,7 +85,14 @@ class button :
                 else :
                     y = image.height - h - (self.controller.buttonRes / 8)
 
-            draw.text((image.width / 2 - (w/2), y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
+            system = platform.system().lower()
+
+            if system == "windows" : #Fixing weird bug
+                x = image.width / 2
+            else :
+                x = image.width / 2 - (w/2)
+
+            draw.text((x, y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
 
         image = PILHelper.to_native_format(self.controller.deck, image)
 
