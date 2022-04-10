@@ -429,7 +429,11 @@ class pages :
                     else :
                         key.sendToDevice()
                     
-                    ticks[tick]["nextTrigger"] = time.time() + tickModule.nextTickWait(button, self.activePageName, self.controller.serial) 
+                    try :
+                        wait = tickModule.nextTickWait(button, self.activePageName, self.controller.serial)
+                    except Exception as e :
+                        self.error("nextTickWait\nerror", f"nextTickWait() in {tick}: {e}")
+                    ticks[tick]["nextTrigger"] = time.time() + wait
 
 
 # ------------------------ #
