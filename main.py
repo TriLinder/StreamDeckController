@@ -111,4 +111,4 @@ if __name__ == "__main__" :
 
         deck.close()
     
-    print(f"Stream Deck device with the serial '{deviceSerial}' was not found.")
+    print(f"Stream Deck device with the serial '{deviceSerial}' was not found.\nTry reconnecting it.")
