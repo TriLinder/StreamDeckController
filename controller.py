@@ -367,7 +367,11 @@ class pages :
                         tickID = self.ticks[tick]
 
                         tickModule = globals()[tickID]
-                        tickModule.keyPress(coords, self.activePageName, self.controller.serial)
+
+                        try :
+                            tickModule.keyPress(coords, self.activePageName, self.controller.serial)
+                        except Exception as e :
+                            self.error("keyPress\nError.", f"keypress() in module {tick}: {e}")
 
 
             except KeyError :
