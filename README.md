@@ -12,7 +12,7 @@ _________________
 
     1. Download the latest [release](https://github.com/TriLinder/StreamDeckController/releases)
 
-    2. Uncompress the archive into a new directory
+    2. Decompress the archive into a new directory
 
     3. Install all the required modules from `requirements.txt`
 
@@ -20,7 +20,7 @@ _________________
 
     5. Download a font of your choice and place it into the `fonts` directory
 
-    6. Open `config.json` and modify `font` to the name your font of choice.
+    6. Open `config.json` and modify `font` to the name of your font of choice.
 
     7. Run `main.py`
 
@@ -38,7 +38,7 @@ If you're using the 15 button Stream Deck (the one in the picture above), you wi
 
 <img title="" src="readme_photos/noFont.jpg" alt="noFont.jpg" width="250">
 
-If you're presented with a screen like this, you haven't installed the font correctly. Please double check that the font file is either a `.ttf` or a `.otf` and its in the correct directory.
+If you're presented with a screen like this, you haven't installed the font correctly. Please double-check that the font file is either a `.ttf` or a `.otf` and its in the correct directory.
 
 Then check that you entered the right name into `config.json`.
 
@@ -48,7 +48,7 @@ If you still can't get your font to work, try another font or create an issue he
 
 <img title="" src="readme_photos/invalidLayout.jpg" alt="invalidLayout.jpg" width="250">
 
-This error screen means the page you're trying to load is made for a diffrent Stream Deck model. If you see this on the first start, you're probably not using the 15 button model and so can't use the demo. Don't worry however as you can still use your own profiles as is explained below.
+This error screen means the page you're trying to load is made for a different Stream Deck model. If you see this on the first start, you're probably not using the 15 button model and so can't use the demo. Don't worry however as you can still use your own profiles as is explained below.
 
 ---
 
@@ -76,7 +76,7 @@ First, let's start with editing the `dimensions` key. This is used to determine 
 
 ‏‏‎ ‎
 
-The `created` key is a [UNIX tiestmap](https://en.wikipedia.org/wiki/Unix_time) and while it's not currenlty used by the progam, I still recomenned setting it as it may be used in a future version.
+The `created` key is a [UNIX timestmap](https://en.wikipedia.org/wiki/Unix_time) and while it's not currently used by the program, I still recommend setting it as it may be used in a future version.
 
 ‏‏‎ ‎
 
@@ -90,14 +90,14 @@ We'll get to the `images` and `ticks` keys later.
 
 Now let's add some buttons.
 
-First however, let's look at coordinates.
+First, however, let's look at coordinates.
 
 | 0x0 | 1x0 | 2x0 | 3x0 | 4x0 |
 |:---:| --- | --- | --- | --- |
 | 0x1 | 1x1 | 2x1 | 3x1 | 4x1 |
 | 0x2 | 1x2 | 2x2 | 3x2 | 4x2 |
 
-Theese are the coordinates for the 15 button Stream Deck. As you can see the coordinates are in the format of  `x/y` with the top left button being  `0x0`.
+These are the coordinates for the 15 button Stream Deck. As you can see, the coordinates are in the format of  `x/y` with the top left button being  `0x0`.
 
 ‎
 
@@ -140,7 +140,7 @@ The button is under the key `0x0`,  which you may recognize as coordinates. If w
 
 ‏‏‎ ‎
 
-Here is the explation of the keys you can see in the example:
+Here is the explanation of the keys you can see in the example:
 
 | **KEY**         | **EXPLANATION**                                                                                                          |
 | ---------------:|:------------------------------------------------------------------------------------------------------------------------ |
@@ -165,6 +165,7 @@ Since there's currently no link leading to our file, we'll set the program to st
 Let's open up `config.json`, that's located in the same directory as `main.py`, and edit it.
 
 This is how the file looks by default.
+
 
 ```json
 {
@@ -201,13 +202,13 @@ Adding new images is pretty easy. First, let's find an image to add, preferably 
 
 What about this [dice vector drawing from Pixabay](https://pixabay.com/vectors/dice-cube-die-game-gamer-chance-152068/)? 
 
-It's not exactly square, but that doesn't matter as the software will scale it to fit the button anyway.
+It's not exactly square, but that doesn't matter, as the software will scale it to fit the button anyway.
 
 <img title="" src="readme_photos/dice_152068_pixabay.png" alt="dice_152068_pixabay.png" width="179" data-align="center">
 
 ‎
 
-All we need is the lowest resolution version avaiable, as the Stream Deck display isn't that high-res.
+All we need is the lowest resolution version available, as the Stream Deck display isn't that high-res.
 
 ‎
 
@@ -230,7 +231,7 @@ Now let's open up `test1.json` again and add the image to the button.
 }
 ```
 
-First we have to add the image to the `images` key at the top. You may get away with not doing this in some cases, but you should add it regardless.
+First, we have to add the image to the `images` key at the top. You may get away with not doing this in some cases, but you should add it regardless.
 
 ```json
 "images": ["blank", "dice.png"],
@@ -264,7 +265,7 @@ You should see that your button got a nice new background. But it's still not do
 
 Actions are triggered by pressing a button or by plugins (ticks).
 
-As of this version the program has 10 actions built-in.
+As of this version, the program has 10 actions built-in.
 
 | **ACTION**         | **INPUT**              | **DESCRIPTION**                                                                                   |
 |:------------------:|:----------------------:|:-------------------------------------------------------------------------------------------------:|
@@ -279,7 +280,7 @@ As of this version the program has 10 actions built-in.
 | `openURL`          | `str` - URL            | Opens a URL                                                                                       |
 | `randomColors`     | NONE                   | Fills the screen with random colors, as seen on the first picture.                                |
 
-You can trigger any of theese actions with a button by adding it to it's `actions` key.
+You can trigger any of these actions with a button by adding it to it's `actions` key.
 
 Let's go back to our button we created in `test1.json`
 
@@ -347,7 +348,7 @@ When pressed, your console output should look something like this.
 0x0 setBrightness 100
 ```
 
-This means both actions were triggered successfully and the brightness was increased.
+This means both actions were triggered successfully, and the brightness was increased.
 
 ‎
 
@@ -357,7 +358,7 @@ If you can run the demo, you can test out all the actions in it. (`showcase4.jso
 
 ‎
 
-But if you still feel limited by your options, you can make your own by writing plugins.
+But if you still feel limited by your options, you can make your own by making plugins.
 
 ---
 
@@ -371,13 +372,13 @@ But if you paid attention above, you'd know that a clock action doesn't exist.
 
 ‎
 
-So how is this even possible? Well the answer seems kinda obvious now, it's done using a simple plugin.
+So how is this even possible? Well, the answer seems kinda obvious now, it's done using a simple plugin.
 
 ‎
 
 Plugins are located under the `pages/ticks` directory.
 
-As you can see the demo in fact includes a `clock.py`, so let's take a look at it.
+As you can see, the demo in fact includes a `clock.py`, so let's take a look at it.
 
 ```python
 from time import localtime, strftime
@@ -417,7 +418,7 @@ And this is how the clock button under `showcase1.json` looks.
        }
 ```
 
-But first don't forget to add the plugin's file name to the `ticks` key of every page where it's used.
+But first, don't forget to add the plugin's file name to the `ticks` key of every page where it's used.
 
 ```json
 "images": ["blank", "white.jpg"],
@@ -447,7 +448,7 @@ First let's show some text, any text, from the plugin on the Stream Deck.
 
 ‎
 
-Back in `test1.json` we'll first have to add our new plugin to the `ticks` key.
+Back in `test1.json`, we'll first have to add our new plugin to the `ticks` key.
 
 ```json
 {
@@ -495,14 +496,14 @@ The syntax above says: every tick ask `dice.py` for updates with the `diceRoll` 
 
 Now we can return to our `dice.py` file and continue programming.
 
-Before outputing anything to the Stream Deck, we need to tell Stream Deck Controller how often to ask our program for output.
+Before outputting anything to the Stream Deck, we need to tell Stream Deck Controller how often to ask our program for output.
 
 ```python
 def nextTickWait(coords, page, serial): #A function called by the Stream Deck Controller
     return 1 #Time until next tick in seconds
 ```
 
-The function above is called after every tick to determine how long to wait for the next one. In our case we only need 1 TPS (tick per second), but you can dynamically change the value if you want to.
+The function above is called after every tick to determine how long to wait for the next one. In our case, we only need 1 TPS (tick per second), but you can dynamically change the value if you want to.
 
 The TPS cannot be higher than the value of  `maxTPS` in `config.json`.
 
@@ -534,7 +535,7 @@ First, we check that the correct custom action is called with the `if` statement
 
 Then we return a dictionary with new values for our button.
 
-All of the keys in the dictionary are optional.
+All the keys in the dictionary are optional.
 
 | **KEY**      | **FORMAT**       |
 | ------------ |:----------------:|
@@ -554,7 +555,7 @@ def keyPress(coords, page, serial):
     caption = generateDiceRoll()
 ```
 
-There we go! 
+And there we go! 
 
 The `keyPress` function gets called when the button is pressed.
 
@@ -572,7 +573,7 @@ You are now ready to use Stream Deck Controller. Good luck!
 
 ## Final notes
 
-Sorry for the huge delay for relasing the program. I just couldn't get around to finishing the last few lines of this README. I also just didn't expect to get this amount of attention on Reddit.
+Sorry for the huge delay for releasing the program. I just couldn't get around to finishing the last few lines of this README. I also just didn't expect to get this amount of attention on Reddit.
 
 
 
