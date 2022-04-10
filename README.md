@@ -218,7 +218,7 @@ Download the `.png` file and place it inside the `pages/imgs` directory under th
 Now let's open up `test1.json` again and add the image to the button.
 
 ```json
-blank{
+{
     "images": ["blank"],
     "ticks": [],
     "dimensions": "5x3",
@@ -405,7 +405,7 @@ def keyPress(coords, page, serial) : #Cycle through time formats on keypress
         format = 0
 ```
 
-makingAnd this is how the clock button under `showcase1.json` looks.
+And this is how the clock button under `showcase1.json` looks.
 
 ```json
 "2x1" : {"caption":"00:00", 
@@ -414,8 +414,8 @@ makingAnd this is how the clock button under `showcase1.json` looks.
         "background":"blank", 
         "actions":{"none":""}, 
         "ticks":{
-                    "clock.py":"clock"
-                }
+                 "clock.py":"clock"
+}
        }
 ```
 
