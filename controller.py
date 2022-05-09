@@ -85,9 +85,7 @@ class button :
                 else :
                     y = image.height - h - (self.controller.buttonRes / 8)
 
-            system = platform.system().lower()
-
-            if system == "windows" : #Fixing weird bug
+            if self.controller.fontCenterFix : #Fixing font not being centered on certain systems
                 x = image.width / 2
             else :
                 x = image.width / 2 - (w/2)
@@ -117,6 +115,7 @@ class controller :
         self.width = deck.key_layout()[1]
         self.serial = deck.get_serial_number()
         self.buttonRes = deck.key_image_format()["size"][0] #The resolution of a single button
+        self.fontCenterFix = False
         self.fontName = font
         self.fonts = {}
 

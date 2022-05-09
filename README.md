@@ -48,7 +48,17 @@ If you still can't get your font to work, try another font or create an issue he
 
 <img title="" src="readme_photos/invalidLayout.jpg" alt="invalidLayout.jpg" width="250">
 
-This error screen means the page you're trying to load is made for a different Stream Deck model. If you see this on the first start, you're probably not using the 15 button model and so can't use the demo. Don't worry however as you can still use your own profiles as is explained below.
+This error screen means the page you're trying to load is made for a different Stream Deck model. If you see this on the first start, you're probably not using the 15 button model and so can't load up the demo. Don't worry however as you can still use your own profiles as is explained below.
+
+
+
+# Text isn't centered correctly / is off-screen
+
+This is a weird bug I couldn't figure out: the text on buttons renders off-center on some operating systems. As a workaround, you can set the `fontCenterFix` key in `config.json` to `true`, like this:
+
+```json
+"fontCenterFix": true
+```
 
 ---
 
@@ -166,13 +176,13 @@ Let's open up `config.json`, that's located in the same directory as `main.py`, 
 
 This is how the file looks by default.
 
-
 ```json
 {
     "startingPage": "welcome.json",
     "startingBrightness": 75,
     "deviceSerial": "selectOnStartup",
-    "font": "yourFont.ttf"
+    "font": "yourFont.ttf",
+    "fontCenterFix": false
 }
 ```
 
@@ -561,8 +571,6 @@ The `keyPress` function gets called when the button is pressed.
 
 When called, the function sets the global `caption` variable to a random number, and the caption gets sent to the device next tick from the `getKeyState` function.
 
-
-
 Let's restart the program and see if it works!
 
 If you've done everything correctly, your plugin should now work.
@@ -574,7 +582,5 @@ You are now ready to use Stream Deck Controller. Good luck!
 ## Final notes
 
 Sorry for the huge delay for releasing the program. I just couldn't get around to finishing the last few lines of this README. I also just didn't expect to get this amount of attention on Reddit.
-
-
 
 If you find a bug, please create an issue for it. Thanks for reading through this and have a great day.
