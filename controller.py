@@ -317,9 +317,7 @@ class pages :
         elif action == "exit" :
             self.controller.deck.reset()
             self.controller.deck.close()
-            os.exit()
-            quit()
-            sys.exit() #Sometimes doesn't quit, see https://stackoverflow.com/questions/66831613/python-script-not-stopping-on-sys-exit
+            os._exit(1)
         elif action == "setBrightness" :
             self.controller.deck.set_brightness(int(actionData))
         elif action == "showCoords" :
