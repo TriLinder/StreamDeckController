@@ -37,40 +37,46 @@ def writeConfigKey(key, data) : #Write key to config.json
 
     
 def chooseDevice(devices) : #Select device
-    print("Please choose your device:")
+    if len(devices) > 0 :
+        print("Please choose your device:")
 
-    serials = []
+        serials = []
 
-    i = 0
-    for device in devices :
-        i += 1
+        i = 0
+        for device in devices :
+            i += 1
 
-        device.open()
+            device.open()
 
-        type = device.deck_type()
-        serial = device.get_serial_number()
+            type = device.deck_type()
+            serial = device.get_serial_number()
 
-        device.close()
+            device.close()
 
-        serials.append(serial)
+            serials.append(serial)
 
-        print(f"    {i}. {type} ({serial})")
+            print(f"    {i}. {type} ({serial})")
 
-    selection = input("Option: ").strip()
+        selection = input("Option: ").strip()
 
-    try :
-        selection = int(selection)
-    except :
-        print("Not an integer.")
+        try :
+            selection = int(selection)
+        except :
+            print("Not an integer.")
+            input("Press [ENTER] to quit..")
+            sys.exit()
+    
+        if selection not in range(1, len(serials)+1) :
+            print("Not in range.")
+            input("Press [ENTER] to quit..")
+            sys.exit()
+    
+        serial = serials[selection-1]
+    
+    else :
+        print("No Stream Deck found. Please make sure that you installed the streamdeck module correctly, and that your device is plugged in.")
         input("Press [ENTER] to quit..")
         sys.exit()
-    
-    if selection not in range(1, len(serials)+1) :
-        print("Not in range.")
-        input("Press [ENTER] to quit..")
-        sys.exit()
-    
-    serial = serials[selection-1]
 
     print("\nDevice selected.")
     if input("Would you like to save your selection? y/N ").lower().strip() == "y" :
