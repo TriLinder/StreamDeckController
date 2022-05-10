@@ -119,6 +119,8 @@ class controller :
         self.fontName = font
         self.fonts = {}
 
+        self.disableInput = False
+
         self.resetScreen()
     
     def getFontPath(self, fontName) :
@@ -269,8 +271,10 @@ class pages :
 
         dimensions = f"{self.controller.width}x{self.controller.height}" #Detect pages for other stream deck layouts
         if not dimensions == j["dimensions"] :
-            self.error("Invalid\nlayout.", f"Page '{page}' is in an invalid layout size for Stream Deck '{self.controller.serial}'.")
+            self.error("Invalid\nlayout.", f"Page '{page}' is in an invalid layout size for this Stream Deck '{self.controller.serial}'.")
             return False
+
+        #self.controller.disableInput = True
 
         for button in buttons :
             buttonJ = buttons[button]
@@ -348,21 +352,15 @@ class pages :
         y = math.ceil((keyIndex+1) / self.controller.width)-1
         coords = f"{x}x{y}"
 
+        if self.controller.disableInput : #Input disabled, do not continue
+            return
+
         self.controller.screen[coords].activated = state #Triggers the click 'animation'.
         self.controller.screen[coords].sendToDevice()
 
         if not state : #Wait until the button is released
             try :
                 button = self.activePage["buttons"][coords]
-            
-                for action in button["actions"] :
-                    actionData = button["actions"][action]
-
-                    try :
-                        self.triggerAction(coords, action, actionData)
-                    except Exception as e :
-                        self.error("Could not\ntrigger.", f"Could not trigger action '{action}' with action data '{actionData}', error: {e}")
-                        return False
 
                 if coords in self.tickingItems : #Triggers tick function on ticking buttons
                     ticks = self.tickingItems[coords]
@@ -376,6 +374,15 @@ class pages :
                             tickModule.keyPress(coords, self.activePageName, self.controller.serial)
                         except Exception as e :
                             self.error("keyPress\nError.", f"keypress() in module {tick}: {e}")
+                
+                for action in button["actions"] :
+                    actionData = button["actions"][action]
+
+                    try :
+                        self.triggerAction(coords, action, actionData)
+                    except Exception as e :
+                        self.error("Could not\ntrigger.", f"Could not trigger action '{action}' with action data '{actionData}', error: {e}")
+                        return False
 
 
             except KeyError :
@@ -431,6 +438,8 @@ class pages :
                     except Exception as e :
                         self.error("nextTickWait\nerror", f"nextTickWait() in {tick}: {e}")
                     ticks[tick]["nextTrigger"] = time.time() + wait
+    
+        #self.controller.disableInput = False
 
 
 # ------------------------ #

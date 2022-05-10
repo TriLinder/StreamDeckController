@@ -116,7 +116,7 @@ if __name__ == "__main__" :
             p.switchToPage(startingPage)
 
             while True :
-                time.sleep(.25)
+                time.sleep(.1)
                 p.tick()
 
         deck.close()
