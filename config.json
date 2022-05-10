@@ -2,6 +2,5 @@
     "startingPage": "welcome.json",
     "startingBrightness": 75,
     "deviceSerial": "selectOnStartup",
-    "font": "yourFont.ttf",
-    "fontCenterFix": false
+    "font": "yourFont.ttf"
 }

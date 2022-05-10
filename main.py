@@ -93,7 +93,6 @@ if __name__ == "__main__" :
     startingBrighntess = getConfigKey("startingBrightness")
     deviceSerial = getConfigKey("deviceSerial")
     font = getConfigKey("font")
-    fontCenterFix = getConfigKey("fontCenterFix")
 
     if deviceSerial == "selectOnStartup" :
         deviceSerial = chooseDevice(DeviceManager().enumerate())
@@ -110,9 +109,6 @@ if __name__ == "__main__" :
             deck.set_brightness(startingBrighntess)
 
             p = controller.pages(c)
-
-            p.controller.fontCenterFix = bool(fontCenterFix)
-
             p.switchToPage(startingPage)
 
             while True :

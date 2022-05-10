@@ -50,16 +50,6 @@ If you still can't get your font to work, try another font or create an issue he
 
 This error screen means the page you're trying to load is made for a different Stream Deck model. If you see this on the first start, you're probably not using the 15 button model and so can't load up the demo. Don't worry however as you can still use your own profiles as is explained below.
 
-
-
-# Text isn't centered correctly / is off-screen
-
-This is a weird bug I couldn't figure out: the text on buttons renders off-center on some operating systems. As a workaround, you can set the `fontCenterFix` key in `config.json` to `true`, like this:
-
-```json
-"fontCenterFix": true
-```
-
 ---
 
 ## Creating your own profiles
@@ -181,8 +171,7 @@ This is how the file looks by default.
     "startingPage": "welcome.json",
     "startingBrightness": 75,
     "deviceSerial": "selectOnStartup",
-    "font": "yourFont.ttf",
-    "fontCenterFix": false
+    "font": "yourFont.ttf"
 }
 ```
 
