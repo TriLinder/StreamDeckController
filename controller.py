@@ -53,7 +53,10 @@ class button :
         else :
             size = round(self.controller.buttonRes / 6)
 
-        image = PILHelper.create_scaled_image(self.controller.deck, self.background, margins=[size, size, size, size])
+        try :
+            image = PILHelper.create_scaled_image(self.controller.deck, self.background, margins=[size, size, size, size])
+        except :
+            return
 
         draw = ImageDraw.Draw(image)
         
@@ -224,7 +227,8 @@ class pages :
                     globals()[id] = module
 
                     self.ticks[tick] = id
-                except :
+                except Exception as e :
+                    print(e)
                     pass
 
 
@@ -359,12 +363,16 @@ class pages :
         self.controller.screen[coords].activated = state #Triggers the click 'animation'.
         self.controller.screen[coords].sendToDevice()
 
+
         if not state : #Wait until the button is released
             try :
                 button = self.activePage["buttons"][coords]
 
                 if coords in self.tickingItems : #Triggers tick function on ticking buttons
-                    ticks = self.tickingItems[coords]
+                    try :
+                        ticks = self.tickingItems[coords]
+                    except KeyError :
+                        return
                     
                     for tick in ticks :
                         tickID = self.ticks[tick]
@@ -391,7 +399,10 @@ class pages :
     
     def tick(self) :
         for button in self.tickingItems :
-            ticks = self.tickingItems[button]
+            try :
+                ticks = self.tickingItems[button]
+            except KeyError :
+                return False
             for tick in ticks :
                 try :
                     tickID = self.ticks[tick]
