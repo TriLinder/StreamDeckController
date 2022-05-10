@@ -208,7 +208,8 @@ class pages :
                         self.images[image] = Image.new("RGB", (self.controller.buttonRes, self.controller.buttonRes))
             
             for tick in self.pages[page]["ticks"] : #Imports all the ticking files
-                name = tick.strip(".py")
+                if tick.endswith(".py") :
+                    name = tick[:-3]
                 id = "t" + uuid.uuid4().hex[:12]
                 
                 #exec(f"global {id}") #Trying to import the module using diffrent methods
