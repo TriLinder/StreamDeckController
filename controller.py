@@ -62,7 +62,7 @@ class button :
         
         fontSize = self.fontSize
         if self.activated :
-            fontSize = round(fontSize / 1.25)
+            fontSize = fontSize / 1.25
 
         if not self.caption.strip() == "" :
 
@@ -88,9 +88,12 @@ class button :
                 else :
                     y = image.height - h - (self.controller.buttonRes / 8)
 
-            x = image.width / 2 - (w/2)
+            if self.controller.fontCenterFix : #Fixing font not being centered on certain systems
+                x = image.width / 2
+            else :
+                x = image.width / 2 - (w/2)
 
-            draw.text((round(x), round(y)), text=self.caption, font=font, anchor="ma", fill=self.fontColor, align="center")
+            draw.text((x, y), text=self.caption, font=font, anchor="ms", fill=self.fontColor, align="center")
 
         image = PILHelper.to_native_format(self.controller.deck, image)
 
@@ -115,6 +118,7 @@ class controller :
         self.width = deck.key_layout()[1]
         self.serial = deck.get_serial_number()
         self.buttonRes = deck.key_image_format()["size"][0] #The resolution of a single button
+        self.fontCenterFix = False
         self.fontName = font
         self.fonts = {}
 
