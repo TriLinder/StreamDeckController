@@ -15,7 +15,7 @@
         "0x2" : {"caption":"keyboardType", "fontSize":10, "color":"black", "background":"white.jpg", "actions":{"keyboardType":"Hello, world! You are writing from a Stream Deck! Isn't that amazing?"}},
         "1x2" : {"caption":"keyboardShortcut", "fontSize":9, "color":"black", "background":"white.jpg", "actions":{"keyboardShortcut":"CTRL+A"}},
         "4x2" : {"caption":"openURL", "fontSize":12, "color":"black", "background":"white.jpg", "actions":{"openURL":"https://github.com/TriLinder/StreamDeckController"}},
-        "3x2" : {"caption":"randomColors", "fontSize":10, "color":"black", "background":"white.jpg", "actions":{"randomColors":""}},
+        "3x2" : {"caption":"screenshot", "fontSize":10, "color":"black", "background":"white.jpg", "actions":{"screenshot":"screenshot.jpg"}},
 
         "2x2" : {"caption":"NEXT", "fontSize":12, "color":"white", "background":"blank", "actions":{"switchPage":"enjoy.json"}}
     }
