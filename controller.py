@@ -95,10 +95,12 @@ class button :
 
             draw.text((round(x), round(y)), text=self.caption, font=font, anchor="ma", fill=self.fontColor, align="center")
 
-        image = PILHelper.to_native_format(self.controller.deck, image)
+        nativeImage = PILHelper.to_native_format(self.controller.deck, image)
 
         with self.controller.deck :
-            self.controller.deck.set_key_image(self.keyIndex, image)
+            self.controller.deck.set_key_image(self.keyIndex, nativeImage)
+        
+        return image
     
     def loadImage(self, path) :
         self.background = Image.open(path)
@@ -152,11 +154,34 @@ class controller :
         self.screen = d
     
     def sendScreenToDevice(self) :
+        keysImages = {}
+
         for key in self.screen :
-            self.screen[key].sendToDevice()
+            image = self.screen[key].sendToDevice()
+            keysImages[key] = image
+        
+        return keysImages
     
     def setKeyCallback(self, func) :
         self.deck.set_key_callback(func)
+
+    def screenshot(self, filename) :
+        width = self.buttonRes * self.width
+        height = self.buttonRes * self.height
+
+        screenshot = Image.new("RGB", (width, height))
+        keysImages = self.sendScreenToDevice() #Re-render every key
+
+        for key in keysImages :
+            coordsX = int(key.split("x")[0])
+            coordsY = int(key.split("x")[1])
+
+            pixelX = coordsX * self.buttonRes
+            pixelY = coordsY * self.buttonRes
+
+            screenshot.paste(keysImages[key], (pixelX, pixelY))
+        
+        screenshot.save(filename, quality=100)
     
     def coordsCaptions(self, clearScreen) :
 
@@ -335,6 +360,8 @@ class pages :
             self.controller.sendScreenToDevice()
         elif action == "runCommand" :
             subprocess.call(str(actionData), stderr=subprocess.DEVNULL)
+        elif action == "screenshot" :
+            self.controller.screenshot(actionData)
         elif action == "openTxt" : #Should only be used on the error screen.
             system = platform.system().lower()
 
