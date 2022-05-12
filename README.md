@@ -546,13 +546,14 @@ Then we return a dictionary with new values for our button.
 
 All the keys in the dictionary are optional.
 
-| **KEY**      | **FORMAT**       |
-| ------------ |:----------------:|
-| `caption`    | `str`            |
-| `background` | `PIL Image`      |
-| `fontColor`  | `str`            |
-| `fontSize`   | `int` or `float` |
-| `actions`    | `dict`           |
+| **KEY**       | **FORMAT**       |
+| ------------- |:----------------:|
+| `caption`     | `str`            |
+| `background`  | `PIL Image`      |
+| `fontColor`   | `str`            |
+| `fontSize`    | `int` or `float` |
+| `doNotUpdate` | `bool`           |
+| `actions`     | `dict`           |
 
 If we start main.py, we can see that the text is in fact displayed. 
 

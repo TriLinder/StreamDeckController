@@ -100,7 +100,7 @@ class button :
 
         with self.controller.deck :
             self.controller.deck.set_key_image(self.keyIndex, nativeImage)
-        
+
         return image
     
     def loadImage(self, path) :
@@ -464,6 +464,11 @@ class pages :
 
         if "fontSize" in newState :
             key.fontSize = newState["fontSize"]
+
+        if "doNotUpdate" in newState :
+            doNotUpdate = newState["doNotUpdate"]
+        else :
+            doNotUpdate = False
                     
         if len(newState["actions"]) > 0 :
             for action in newState["actions"] :
@@ -471,7 +476,8 @@ class pages :
                 self.triggerAction(button, action, actionData)
                 self.controller.sendScreenToDevice()
         else :
-            key.sendToDevice()
+            if not doNotUpdate :
+                key.sendToDevice()
                     
         try :
             wait = tickModule.nextTickWait(button, self.activePageName, self.controller.serial)
