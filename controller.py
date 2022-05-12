@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 import subprocess
 import webbrowser
 import importlib
+import threading
 import platform
 import keyboard
 import random
@@ -380,6 +381,12 @@ class pages :
             self.controller.sendScreenToDevice()
 
     
+    def tickKeyPress(self, coords, tickModule, tick) :
+        try :
+            tickModule.keyPress(coords, self.activePageName, self.controller.serial)
+        except Exception as e :
+            self.error("keyPress\nError.", f"keypress() in module {tick}: {e}")
+
     def clickHandler(self, deck, keyIndex, state) :
         x = (keyIndex % self.controller.width)
         y = math.ceil((keyIndex+1) / self.controller.width)-1
@@ -406,11 +413,12 @@ class pages :
                         tickID = self.ticks[tick]
 
                         tickModule = globals()[tickID]
-
-                        try :
-                            tickModule.keyPress(coords, self.activePageName, self.controller.serial)
-                        except Exception as e :
-                            self.error("keyPress\nError.", f"keypress() in module {tick}: {e}")
+                        
+                        thread = threading.Thread(target=self.tickKeyPress, args=(coords, tickModule, tick))
+                        thread.start()
+                        
+                        #self.tickKeyPress(coords, tickModule, tick)
+                        
                 
                 for action in button["actions"] :
                     actionData = button["actions"][action]
@@ -424,8 +432,57 @@ class pages :
 
             except KeyError :
                 pass
-    
+
+    def threadedTick(self, ticks, tickID, tick, action, button) :
+        tickModule = globals()[tickID]
+
+        #print("starting", tick, self.activePageName)
+        startingPage = self.activePageName
+
+        try :
+            newState = tickModule.getKeyState(button, self.activePageName, self.controller.serial, action)
+        except Exception as e :
+            self.error("Ticks\nerror", f"Error in '{tick}'. Button: '{button}' Page: '{self.activePageName}' Serial: '{self.controller.serial}' Action: '{action}' Error: '{e}'")
+            return False
+
+        if not self.activePageName == startingPage :
+            #print("interrupted", tick, self.activePageName, startingPage)
+            return False
+
+        #print("finished", tick, self.activePageName)
+
+        key = self.controller.screen[button]
+
+        if "caption" in newState :
+            key.caption = newState["caption"]
+                    
+        if "background" in newState :
+            key.background = newState["background"]
+                    
+        if "fontColor" in newState :
+            key.fontColor = newState["fontColor"]
+
+        if "fontSize" in newState :
+            key.fontSize = newState["fontSize"]
+                    
+        if len(newState["actions"]) > 0 :
+            for action in newState["actions"] :
+                actionData = newState["actions"][action]
+                self.triggerAction(button, action, actionData)
+                self.controller.sendScreenToDevice()
+        else :
+            key.sendToDevice()
+                    
+        try :
+            wait = tickModule.nextTickWait(button, self.activePageName, self.controller.serial)
+        except Exception as e :
+            self.error("nextTickWait\nerror", f"nextTickWait() in {tick}: {e}")
+        ticks[tick]["nextTrigger"] = time.time() + wait
+
     def tick(self) :
+        startingTime = time.time()
+        threads = {}
+
         for button in self.tickingItems :
             try :
                 ticks = self.tickingItems[button]
@@ -442,42 +499,20 @@ class pages :
                 nextTrigger = ticks[tick]["nextTrigger"]
 
                 if time.time() > nextTrigger :
+                    #self.threadedTick(ticks, tickID, tick, action, button)
+                    thread = threading.Thread(target=self.threadedTick, args=(ticks, tickID, tick, action, button))
+                    threads[button] = thread
 
-                    tickModule = globals()[tickID]
+                    thread.start()
+        
+        for thread in threads.values() :
+            thread.join()
 
-                    try :
-                        newState = tickModule.getKeyState(button, self.activePageName, self.controller.serial, action)
-                    except Exception as e :
-                        self.error("Ticks\nerror", f"Error in '{tick}'. Button: '{button}' Page: '{self.activePageName}' Serial: '{self.controller.serial}' Action: '{action}' Error: '{e}'")
-                        return False
-
-                    key = self.controller.screen[button]
-
-                    if "caption" in newState :
-                        key.caption = newState["caption"]
+        if (time.time() - startingTime) > 1 :
+            self.error("Tick took\ntoo long", f"Tick took over a second ({round(time.time() - startingTime, 2)}s) to finish. Avoid doing time-expensive tasks in getKeyState()")
+        
+        #print(f"tick finished! {round(time.time() - startingTime, 2)}s")
                     
-                    if "background" in newState :
-                        key.background = newState["background"]
-                    
-                    if "fontColor" in newState :
-                        key.fontColor = newState["fontColor"]
-
-                    if "fontSize" in newState :
-                        key.fontSize = newState["fontSize"]
-                    
-                    if len(newState["actions"]) > 0 :
-                        for action in newState["actions"] :
-                            actionData = newState["actions"][action]
-                            self.triggerAction(button, action, actionData)
-                        self.controller.sendScreenToDevice()
-                    else :
-                        key.sendToDevice()
-                    
-                    try :
-                        wait = tickModule.nextTickWait(button, self.activePageName, self.controller.serial)
-                    except Exception as e :
-                        self.error("nextTickWait\nerror", f"nextTickWait() in {tick}: {e}")
-                    ticks[tick]["nextTrigger"] = time.time() + wait
     
         #self.controller.disableInput = False
 
