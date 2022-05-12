@@ -50,8 +50,6 @@ If you still can't get your font to work, try another font or create an issue he
 
 This error screen means the page you're trying to load is made for a different Stream Deck model. If you see this on the first start, you're probably not using the 15 button model and so can't load up the demo. Don't worry however as you can still use your own profiles as is explained below.
 
-
-
 # Text isn't centered correctly / is off-screen
 
 This is a weird bug I couldn't figure out: the text on buttons renders off-center on some operating systems. As a workaround, you can set the `fontCenterFix` key in `config.json` to `true`, like this:
@@ -284,6 +282,7 @@ As of this version, the program has 10 actions built-in.
 | `setBrightness`    | `int` - Brightness     | Sets the Stream Deck's brightness                                                                 |
 | `showCoords`       | `bool` - Overwrite     | Set's each button's caption to it's coordinates. If `false` won't overwrite existing captions.    |
 | `runCommand`       | `str` - Command to run | Runs a shell command, such as `ping 1.1.1.1`                                                      |
+| `screenshot`       | `str` - Path           | Takes a screenshot of the Stream Deck's current screen, saves it to set path.                     |
 | `openTxt`          | `str` - Path           | Opens a `.txt` file in an editor. Used by error screens and **should not be used** anywhere else. |
 | `keyboardType`     | `str` - Text           | Types a text by acting as a keyboard.                                                             |
 | `keyboardShortcut` | `str` - Shortcut       | Executes a keyboard shortcut, such as `CTRL + A`                                                  |
