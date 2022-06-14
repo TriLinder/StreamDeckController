@@ -360,7 +360,7 @@ class pages :
             self.controller.coordsCaptions(actionData)
             self.controller.sendScreenToDevice()
         elif action == "runCommand" :
-            subprocess.call(str(actionData), stderr=subprocess.DEVNULL)
+            subprocess.call(str(actionData), shell=True, stderr=subprocess.DEVNULL)
         elif action == "screenshot" :
             self.controller.screenshot(actionData)
         elif action == "openTxt" : #Should only be used on the error screen.
