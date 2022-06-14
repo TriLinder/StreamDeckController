@@ -268,9 +268,10 @@ class pages :
         self.controller.screen["0x0"].fontColor = "black"
         self.controller.screen["0x0"].background = Image.new("RGB", (self.controller.buttonRes, self.controller.buttonRes), (255, 255, 255))
         self.controller.screen["1x0"].caption = "See log\nfor details"
+        self.controller.screen["0x1"].caption = "Exit"
         self.controller.sendScreenToDevice()
 
-        self.activePage = {"buttons":{"1x0": {"actions": {"openTxt":"errorLog.txt"}}}}
+        self.activePage = {"buttons":{"1x0": {"actions": {"openTxt":"errorLog.txt"}}, "0x1": {"actions": {"exit":""}}}}
         self.activePageName = "**error**"
 
         print(f"[ERROR] {logError}")
